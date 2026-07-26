@@ -1,6 +1,12 @@
 import re
 from playwright.sync_api import Playwright, sync_playwright, expect
+from time import sleep
+import pandas as pd
 
+df = pd.read_csv('dataset.csv')
+
+
+leads = df['ID Lead'].drop_duplicates().tolist()
 
 def run(playwright: Playwright) -> None:
     browser = playwright.chromium.launch(headless=False)
@@ -13,83 +19,118 @@ def run(playwright: Playwright) -> None:
     page.get_by_role("textbox", name="Senha").fill("12345")
     page.get_by_role("button", name="Entrar").click()
 
-
-    # acessando os leads
-    page.get_by_role("link", name="group Candidatos").click()
-    page.get_by_role("link", name="group Leads").click()
+    sleep(5)  # aguarda 5 segundos para garantir que a página carregue completamente
 
 
-    # iterando sobre os leads
-    page.get_by_role("searchbox", name="Filtrar por palavra-chave").click()
-    page.get_by_role("searchbox", name="Filtrar por Celular, CPF, E-").fill("teste")
-    page.get_by_role("searchbox", name="Filtrar por Celular, CPF, E-").press("Enter")
+    # iterar sobre as leads e excluir inscrições
+    for lead in leads:
+        inscricoes = df.loc[df['ID Lead'] == lead, 'id_inscricao'].values
+        for inscricao in inscricoes:
+            try:
+                link = page.goto(f"https://wakeme.crmeducacional.com/app/inscriptions/?open={inscricao}")
+                sleep(3)  # aguarda 5 segundos para garantir que a página carregue completamente
+                # link = f"https://wakeme.crmeducacional.com/app/inscriptions/?legacyUrl=%2FInscricao%2FEditar%{inscricao}"
+                page.goto(link)
+                
 
-    with context.expect_page() as pagina:
-        page.get_by_role("link", name="Analista Crm").click(modifiers=["ControlOrMeta"])
+            except Exception as e:
+                print(f"Erro ao acessar a inscrição {inscricao}: {e}")
+                pass
+            page.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Relacionados").click()
+
+            
+            localizadores = [
+                "#botoes-leads-da-inscricao",
+                "#botoes-pagamentos-da-inscricao",
+                "#botoes-redacoes-da-inscricao",
+                "#provas-objetivas-da-inscricao",
+                '#avaliacoes-da-inscricao',
+                '#classificacoes-da-inscricao',
+                '#precos-da-inscricao',
+                '#termos-da-inscricao']
+
+            frame = page.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("div[id='relacionados']")
+
+            for localizador in localizadores:
+                section = frame.locator(localizador)
+                # garantir que a seção esteja visível na viewport do iframe
+                try:
+                    section.scroll_into_view_if_needed()
+                except Exception:
+                    pass
+                sleep(0.3)
+
+                checkboxes = section.locator("input[type='checkbox']")
+                try:
+                    count = checkboxes.count()
+                except Exception:
+                    count = 0
+
+                print(f"Encontrados {count} checkboxes na seção {localizador}.")
+                # se não achar checkboxes, tente rolar mais dentro do iframe para carregar itens dinâmicos
+                
+
+                for i in range(count):
+                    cb = checkboxes.nth(i)
+                    try:
+                        if cb.is_visible():
+                            try:
+                                cb.check(timeout=2000)
+                            except Exception:
+                                try:
+                                    cb.click()
+                                except Exception:
+                                    handle = cb.element_handle()
+                                    if handle:
+                                        try:
+                                            handle.evaluate("el => { el.checked = true; el.dispatchEvent(new Event('change', {bubbles:true})); }")
+                                        except Exception:
+                                            pass
+                    
+                            sleep(0.2)
+                    except Exception:
+                        # ignore individual checkbox errors and continue
+                        continue
+
+                    
+
+                sleep(1)
+                # tentar remover itens desta seção se existir botão de delete
+                try:
+                    delete_button = section.get_by_role("button", name="delete")
+                    if delete_button.is_visible():
+                        delete_button.click()
+                        sleep(1)
+                        confirm_button = frame.get_by_role("button", name="Remover")
+                        if confirm_button.is_visible():
+                            confirm_button.click()
+                except Exception:
+                    pass
 
 
-    page1 = pagina.value
-    page1.get_by_role("button", name="Inscrições").click()
-
-    with context.expect_page() as pagina2:
-        page1.get_by_role("link", name="CAN-001144-TRI").click(modifiers=["ControlOrMeta"])
-
-    page2 = pagina2.value
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Relacionados").click()
+            # adicionar uma confirmação manual para o usuário antes de clicar no botão "Excluir"
+            print(f"Preparado para excluir a inscrição {inscricao}. Por favor, confirme manualmente se deseja prosseguir com a exclusão.")
+            input("Pressione Enter para continuar...")  
+        
+            botao_excluir = frame.get_by_role("button", name="Excluir")
+            sleep(3)  # aguarda 1 segundo para garantir que o botão seja clicado corretamente
+            if botao_excluir.is_visible():
+                botao_excluir.click()
+                botao_confirmar_exclusao = page.get_by_role("button", name="Excluir")
+                if botao_confirmar_exclusao.is_visible():
+                    botao_confirmar_exclusao.click()
     
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#botoes-leads-da-inscricao").get_by_role("button", name="expand_more").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#leads-da-inscricao").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#botoes-leads-da-inscricao").get_by_role("button", name="delete").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Remover").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#botoes-pagamentos-da-inscricao").get_by_role("button", name="expand_more").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#pagamentos-da-inscricao").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#botoes-pagamentos-da-inscricao").get_by_role("button", name="delete").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Remover").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#botoes-redacoes-da-inscricao").get_by_role("button", name="expand_more").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#redacoes-da-inscricao").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#redacoes-da-inscricao").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#botoes-redacoes-da-inscricao").get_by_role("button", name="delete").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Remover").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#provas-objetivas-da-inscricao").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("row", name="Prova Objetiva Online - CAN-").get_by_role("checkbox").check()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#botoes-provas-objetivas-da-inscricao").get_by_role("button", name="delete").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Remover").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#avaliacoes-da-inscricao").click()
-    page2.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="arrow_back_ios").click()
-    page2.close()
-    page1.get_by_role("link", name="CAN-001144-TRI").click(modifiers=["ControlOrMeta"])
-    page3 = context.new_page()
-    page3.goto("https://wakeme.crmeducacional.com/app/inscriptions/?open=b28bfd64-4149-f111-bec7-000d3a8928f0")
-    page3.goto("https://wakeme.crmeducacional.com/app/inscriptions/?legacyUrl=%2FInscricao%2FEditar%2Fb28bfd64-4149-f111-bec7-000d3a8928f0")
-    page3.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Relacionados").click()
-    page3.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#avaliacoes-da-inscricao").click()
-    page3.close()
-    page1.get_by_role("link", name="CAN-001144-TRI").click(modifiers=["ControlOrMeta"])
-    page4 = context.new_page()
-    page4.goto("https://wakeme.crmeducacional.com/app/inscriptions/?open=b28bfd64-4149-f111-bec7-000d3a8928f0")
-    page4.goto("https://wakeme.crmeducacional.com/app/inscriptions/?legacyUrl=%2FInscricao%2FEditar%2Fb28bfd64-4149-f111-bec7-000d3a8928f0")
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Relacionados").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("checkbox").check()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#botoes-avaliacoes-da-inscricao").get_by_role("button", name="delete").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Remover").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#botoes-classificacoes-da-inscricao").get_by_role("button", name="expand_more").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#classificacoes-da-inscricao").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#botoes-classificacoes-da-inscricao").get_by_role("button", name="delete").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Remover").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#botoes-precos-da-inscricao").get_by_role("button", name="expand_more").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#precos-da-inscricao").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator(".botoes-ribbon-tabela-json.remover-pagina-cad_preco-PrecosEspecificos").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Remover").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator("#botoes-termos-da-inscricao").get_by_role("button", name="expand_more").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator(".botoes-ribbon-tabela-json.remover-pagina-cad_termo-TermodeResponsabilidade").dblclick()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.locator(".botoes-ribbon-tabela-json.remover-pagina-cad_termo-TermodeResponsabilidade").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Remover").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Excluir").click()
-    page4.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Excluir").click()
-    page4.goto("https://wakeme.crmeducacional.com/app/inscriptions/?legacyUrl=%2FInscricao")
-    page1.get_by_role("button", name="Excluir").click()
-    page1.get_by_label("Confirmar exclusão").get_by_role("button", name="Excluir").click()
-    page1.goto("https://wakeme.crmeducacional.com/app/leads/index.html")
+    
+    
+    # excluir lead
+        try:
+            page.goto(f"https://wakeme.crmeducacional.com/app/leads/edit/{lead}")
+        except Exception as e:
+            print(f"Erro ao acessar o lead {lead}: {e}")
+            continue
+
+        page.get_by_label("Confirmar exclusão").get_by_role("button", name="Excluir").click()
+    
 
     # ---------------------
     context.close()

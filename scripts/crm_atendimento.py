@@ -166,7 +166,7 @@ def flatten_record(record):
     }
 
 
-def load_leads():
+def load_atendimentos():
 
     with requests.Session() as session:
 
@@ -205,4 +205,4 @@ def load_leads():
     return df
 
 
-dataset = load_leads()
+

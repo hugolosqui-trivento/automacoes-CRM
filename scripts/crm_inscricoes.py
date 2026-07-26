@@ -20,6 +20,7 @@ AUTH_TYPE = "APICRMEducacional"
 
 atributos = [
     'cad_numeroinscricao',
+    "cad_clientepotencialid",
     "crmeduc_data_aprovacao",
     "cad_datapagamento",
     "cad_situacaoavaliacao",
@@ -31,6 +32,7 @@ atributos = [
 ]
 
 rename_columns = {
+    "cad_clientepotencialid": "Nome Completo",
     'cad_numeroinscricao': 'Numero Inscricao',
     "crmeduc_data_aprovacao": "Data Aprovação",
     "cad_datapagamento": "Data de Pagamento",
@@ -155,7 +157,7 @@ def flatten_record(record):
     }
 
 
-def load_registros():
+def load_inscricoes():
 
     with requests.Session() as session:
 
@@ -200,4 +202,4 @@ def load_registros():
     return df
 
 
-dataset = load_registros()
+
