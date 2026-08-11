@@ -38,7 +38,7 @@ def run(playwright: Playwright) -> None:
             except Exception as e:
                 print(f"Erro ao acessar a inscrição {inscricao}: {e}")
                 pass
-            page.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Relacionados").click()
+            # page.locator("iframe[title=\"ConteÃºdo legado\"]").content_frame.get_by_role("button", name="Relacionados").click()
 
             
             localizadores = [
