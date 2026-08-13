@@ -19,6 +19,7 @@ PASSWORD = "IntegraçãoCRM"
 AUTH_TYPE = "APICRMEducacional"
 
 atributos = [
+    "cad_inscricaoatual",
     "cad_cpf",
     "trivento_tabulacaojafoirealizada",
     "crmeduc_ultimatabulacao",
@@ -81,6 +82,7 @@ atributos = [
 ]
 
 rename_columns = {
+    "cad_inscricaoatual": "Inscrição Atual",
     "cad_cpf" : "cpf",
     "trivento_tabulacaojafoirealizada": "Tabulação Realizada",
     "crmeduc_ultimatabulacao": "Última Tabulação",
@@ -112,7 +114,6 @@ rename_columns = {
     "cad_concursoatual": "Concurso Atual",
     "cad_concursodeorigem": "Concurso de Origem",
     "cad_datanascimento": "Data Nascimento",
-    "cad_inscricaoatual": "Número Inscrição",
     "cad_ofertaatual": "Oferta Atual",
     "cad_situacaofunil": "Situação Funil",
     "cad_corraca": "Cor/Raça",

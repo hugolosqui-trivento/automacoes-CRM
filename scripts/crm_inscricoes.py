@@ -19,6 +19,7 @@ PASSWORD = "IntegraçãoCRM"
 AUTH_TYPE = "APICRMEducacional"
 
 atributos = [
+    "cad_situacao",
     'cad_numeroinscricao',
     "cad_clientepotencialid",
     "crmeduc_data_aprovacao",
@@ -32,6 +33,7 @@ atributos = [
 ]
 
 rename_columns = {
+    "cad_situacao": "Situação Inscrição",
     "cad_clientepotencialid": "Nome Completo",
     'cad_numeroinscricao': 'Numero Inscricao',
     "crmeduc_data_aprovacao": "Data Aprovação",
