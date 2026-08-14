@@ -9,7 +9,7 @@ import streamlit as st
 
 from auth import exigir_autenticacao
 from data_loader import carregar_dados
-from services.relatorios import Relatorios, excel_bytes, para_exibicao
+from services.relatorios import Relatorios, para_exibicao
 from settings import AppSettings, carregar_settings, validar_settings
 
 
@@ -90,16 +90,9 @@ def filtrar_dataframe(df: pd.DataFrame, prefixo: str) -> pd.DataFrame:
     return resultado
 
 
-def mostrar_tabela(df: pd.DataFrame, prefixo: str, nome_download: str) -> None:
+def mostrar_tabela(df: pd.DataFrame, prefixo: str) -> None:
     filtrado = filtrar_dataframe(df, prefixo)
     visivel = para_exibicao(filtrado)
     st.caption(f"{len(visivel):,} registro(s) exibido(s)".replace(",", "."))
     st.dataframe(visivel, use_container_width=True, hide_index=True)
-    st.download_button(
-        "Baixar resultado filtrado",
-        data=excel_bytes({"Relatório": filtrado}),
-        file_name=nome_download,
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        key=f"download_{prefixo}",
-    )
 

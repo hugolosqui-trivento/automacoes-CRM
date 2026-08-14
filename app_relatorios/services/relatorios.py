@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from io import BytesIO
 import unicodedata
 
 import pandas as pd
@@ -183,11 +182,3 @@ def gerar_relatorios(
 
 def para_exibicao(df: pd.DataFrame) -> pd.DataFrame:
     return df.drop(columns=[col for col in df.columns if col.startswith("_")], errors="ignore")
-
-
-def excel_bytes(abas: dict[str, pd.DataFrame]) -> bytes:
-    buffer = BytesIO()
-    with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
-        for nome, quadro in abas.items():
-            para_exibicao(quadro).to_excel(writer, sheet_name=nome[:31], index=False)
-    return buffer.getvalue()

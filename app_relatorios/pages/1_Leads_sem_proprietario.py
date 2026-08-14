@@ -26,31 +26,15 @@ aba_acao, aba_todos, aba_divergencias, aba_mapeamento = st.tabs(
     ["Casos acionáveis", "Todos sem proprietário", "Divergências", "Não mapeados"]
 )
 with aba_acao:
-    mostrar_tabela(
-        relatorios.casos_acionaveis,
-        "acionaveis",
-        "leads_sem_proprietario_acionaveis.xlsx",
-    )
+    mostrar_tabela(relatorios.casos_acionaveis, "acionaveis")
 with aba_todos:
-    mostrar_tabela(
-        relatorios.sem_proprietario,
-        "sem_proprietario",
-        "todos_sem_proprietario.xlsx",
-    )
+    mostrar_tabela(relatorios.sem_proprietario, "sem_proprietario")
 with aba_divergencias:
-    mostrar_tabela(
-        relatorios.divergencias,
-        "divergencias",
-        "divergencias_proprietario_consultor.xlsx",
-    )
+    mostrar_tabela(relatorios.divergencias, "divergencias")
 with aba_mapeamento:
     st.info(
         "Estes registros não entram no cálculo de divergência até que o proprietário "
         "seja associado a um consultor em config/regras.py."
     )
-    mostrar_tabela(
-        relatorios.proprietarios_nao_mapeados,
-        "nao_mapeados",
-        "proprietarios_nao_mapeados.xlsx",
-    )
+    mostrar_tabela(relatorios.proprietarios_nao_mapeados, "nao_mapeados")
 

@@ -26,28 +26,12 @@ aba_crm, aba_planilha, aba_qualidade = st.tabs(
     ["Somente no CRM", "Somente na planilha", "Duplicidades"]
 )
 with aba_crm:
-    mostrar_tabela(
-        relatorios.somente_crm,
-        "somente_crm",
-        "matriculas_somente_crm.xlsx",
-    )
+    mostrar_tabela(relatorios.somente_crm, "somente_crm")
 with aba_planilha:
-    mostrar_tabela(
-        relatorios.somente_planilha,
-        "somente_planilha",
-        "matriculas_somente_planilha.xlsx",
-    )
+    mostrar_tabela(relatorios.somente_planilha, "somente_planilha")
 with aba_qualidade:
     st.subheader("Duplicidades no CRM")
-    mostrar_tabela(
-        relatorios.duplicidades_crm,
-        "duplicidades_crm",
-        "duplicidades_crm.xlsx",
-    )
+    mostrar_tabela(relatorios.duplicidades_crm, "duplicidades_crm")
     st.subheader("Duplicidades na planilha")
-    mostrar_tabela(
-        relatorios.duplicidades_planilha,
-        "duplicidades_planilha",
-        "duplicidades_planilha.xlsx",
-    )
+    mostrar_tabela(relatorios.duplicidades_planilha, "duplicidades_planilha")
 

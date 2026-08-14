@@ -2,7 +2,6 @@
 
 import streamlit as st
 
-from services.relatorios import excel_bytes
 from ui import iniciar_pagina, mostrar_atualizacao, mostrar_metricas
 
 
@@ -43,20 +42,4 @@ with st.expander("Qualidade e cobertura dos dados"):
         f"{len(relatorios.proprietarios_nao_mapeados)}."
     )
 
-# st.download_button(
-#     "Baixar pacote completo",
-#     data=excel_bytes(
-#         {
-#             "Sem proprietário": relatorios.sem_proprietario,
-#             "Casos acionáveis": relatorios.casos_acionaveis,
-#             "Divergências": relatorios.divergencias,
-#             "Somente CRM": relatorios.somente_crm,
-#             "Somente planilha": relatorios.somente_planilha,
-#             "Donos não mapeados": relatorios.proprietarios_nao_mapeados,
-#         }
-#     ),
-#     file_name="relatorios_captacao.xlsx",
-#     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-#     type="primary",
-# )
 
