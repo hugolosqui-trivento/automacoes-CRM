@@ -9,6 +9,7 @@ import pandas as pd
 
 
 INSCRICAO_KEY = "_inscricao_key"
+LEAD_KEY = "_lead_key"
 
 
 @dataclass
@@ -48,6 +49,16 @@ def _normalizar_inscricao(serie: pd.Series) -> pd.Series:
     return serie.astype("string").str.strip().str.upper().replace("", pd.NA)
 
 
+def _normalizar_id(serie: pd.Series) -> pd.Series:
+    return (
+        serie.astype("string")
+        .str.strip()
+        .str.strip("{}")
+        .str.upper()
+        .replace("", pd.NA)
+    )
+
+
 def _com_chave(df: pd.DataFrame, coluna: str) -> pd.DataFrame:
     resultado = df.copy()
     if coluna not in resultado:
@@ -56,16 +67,28 @@ def _com_chave(df: pd.DataFrame, coluna: str) -> pd.DataFrame:
     return resultado
 
 
+def _com_chave_lead(df: pd.DataFrame, coluna: str) -> pd.DataFrame:
+    resultado = df.copy()
+    if coluna not in resultado:
+        resultado[coluna] = pd.NA
+    resultado[LEAD_KEY] = _normalizar_id(resultado[coluna])
+    return resultado
+
+
 def _texto_preenchido(serie: pd.Series) -> pd.Series:
     return serie.notna() & serie.astype("string").str.strip().ne("")
 
 
-def _ordenar_e_unificar(df: pd.DataFrame, data: str | None = None) -> pd.DataFrame:
-    resultado = df.dropna(subset=[INSCRICAO_KEY]).copy()
+def _ordenar_e_unificar(
+    df: pd.DataFrame,
+    data: str | None = None,
+    chave: str = INSCRICAO_KEY,
+) -> pd.DataFrame:
+    resultado = df.dropna(subset=[chave]).copy()
     if data and data in resultado:
         resultado[data] = pd.to_datetime(resultado[data], errors="coerce", utc=True)
         resultado = resultado.sort_values(data, ascending=False, na_position="last")
-    return resultado.drop_duplicates(INSCRICAO_KEY, keep="first")
+    return resultado.drop_duplicates(chave, keep="first")
 
 
 def gerar_relatorios(
@@ -75,8 +98,9 @@ def gerar_relatorios(
     proprietario_para_consultor: dict[str, str],
     consultores_ignorados: set[str],
 ) -> Relatorios:
-    leads = _com_chave(leads, "Inscrição Atual")
+    leads = _com_chave_lead(leads, "ID Lead")
     inscricoes = _com_chave(inscricoes, "Numero Inscricao")
+    inscricoes = _com_chave_lead(inscricoes, "ID Lead Inscrição")
     planilha = _com_chave(planilha, "Número de Inscrição")
 
     situacao = inscricoes.get("Situação Inscrição", pd.Series(index=inscricoes.index, dtype="object"))
@@ -92,14 +116,21 @@ def gerar_relatorios(
     ].copy()
     crm = _ordenar_e_unificar(crm_bruto, "Data Criação Inscrição")
     planilha_unica = _ordenar_e_unificar(planilha_bruta, "DATA")
-    leads_unicos = _ordenar_e_unificar(leads, "Data Criação Lead")
+    leads_unicos = _ordenar_e_unificar(leads, "Data Criação Lead", LEAD_KEY)
 
     colunas_lead = [
         coluna
-        for coluna in [INSCRICAO_KEY, "ID Lead", "Nome Lead", "CPF Lead", "Proprietário"]
+        for coluna in [
+            LEAD_KEY,
+            "ID Lead",
+            "Inscrição Atual",
+            "Nome Lead",
+            "CPF Lead",
+            "Proprietário",
+        ]
         if coluna in leads_unicos
     ]
-    captacao = crm.merge(leads_unicos[colunas_lead], on=INSCRICAO_KEY, how="left")
+    captacao = crm.merge(leads_unicos[colunas_lead], on=LEAD_KEY, how="left")
     proprietario = captacao.get("Proprietário", pd.Series(index=captacao.index, dtype="object"))
     sem_proprietario = captacao.loc[~_texto_preenchido(proprietario)].copy()
     id_lead = sem_proprietario.get("ID Lead", pd.Series(index=sem_proprietario.index, dtype="object"))

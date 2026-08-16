@@ -58,13 +58,37 @@ class CrmClient:
             return value
         return value.get("@name", value.get("#text", value))
 
+    @classmethod
+    def _flatten_record(
+        cls,
+        record: dict,
+        text_attributes: set[str],
+    ) -> dict:
+        """Achata um registro, permitindo obter o ID (#text) de lookups específicos.
+
+        Para esses lookups, o rótulo de exibição (@name) também é preservado em
+        ``<atributo>_name``. Assim, usar o identificador no relacionamento não
+        elimina o nome amigável já exibido nos relatórios.
+        """
+        flattened = {}
+        for key, value in record.items():
+            if key in text_attributes and isinstance(value, dict):
+                flattened[key] = value.get("#text")
+                if "@name" in value:
+                    flattened[f"{key}_name"] = value["@name"]
+                continue
+            flattened[key] = cls._flatten(value)
+        return flattened
+
     def fetch_entity(
         self,
         entity: str,
         attributes: Iterable[str],
         rename: dict[str, str],
+        text_attributes: Iterable[str] = (),
     ) -> pd.DataFrame:
         rows: list[dict] = []
+        text_attributes = set(text_attributes)
         body = self._fetch_xml(entity, attributes)
         endpoint = f"{self.settings.base_url.rstrip('/')}/api/LocalizacaoAvancada"
 
@@ -89,7 +113,7 @@ class CrmClient:
                     if isinstance(records, dict):
                         records = [records]
                     rows.extend(
-                        {key: self._flatten(value) for key, value in record.items()}
+                        self._flatten_record(record, text_attributes)
                         for record in records
                     )
                     if resultset.get("@morerecords") != "1":

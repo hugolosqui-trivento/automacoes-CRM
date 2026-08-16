@@ -10,8 +10,8 @@ def _fontes():
     leads = pd.DataFrame(
         [
             {
-                "Inscrição Atual": " can-001 ",
-                "ID Lead": "L1",
+                "Inscrição Atual": "OUTRA-INSCRICAO",
+                "ID Lead": "{L1}",
                 "Nome Lead": "Lead 1",
                 "Proprietário": None,
                 "Data Criação Lead": "2026-08-01",
@@ -34,12 +34,12 @@ def _fontes():
     )
     inscricoes = pd.DataFrame(
         [
-            {"Numero Inscricao": "CAN-001", "Situação Inscrição": "Matriculado", "Curso ID": "Direito"},
-            {"Numero Inscricao": "CAN-002 ", "Situação Inscrição": "Matriculado", "Curso ID": "Direito"},
-            {"Numero Inscricao": "CAN-003", "Situação Inscrição": "Matriculado", "Curso ID": "Direito"},
-            {"Numero Inscricao": "CAN-004", "Situação Inscrição": "Matriculado", "Curso ID": "Direito"},
-            {"Numero Inscricao": "CAN-005", "Situação Inscrição": "Matriculado", "Curso ID": "Medicina"},
-            {"Numero Inscricao": "CAN-001", "Situação Inscrição": "Matriculado", "Curso ID": "Direito"},
+            {"Numero Inscricao": "CAN-001", "ID Lead Inscrição": "l1", "Situação Inscrição": "Matriculado", "Curso ID": "Direito"},
+            {"Numero Inscricao": "CAN-002 ", "ID Lead Inscrição": "{L2}", "Situação Inscrição": "Matriculado", "Curso ID": "Direito"},
+            {"Numero Inscricao": "CAN-003", "ID Lead Inscrição": "L3", "Situação Inscrição": "Matriculado", "Curso ID": "Direito"},
+            {"Numero Inscricao": "CAN-004", "ID Lead Inscrição": "L4", "Situação Inscrição": "Matriculado", "Curso ID": "Direito"},
+            {"Numero Inscricao": "CAN-005", "ID Lead Inscrição": "L5", "Situação Inscrição": "Matriculado", "Curso ID": "Medicina"},
+            {"Numero Inscricao": "CAN-001", "ID Lead Inscrição": "L1", "Situação Inscrição": "Matriculado", "Curso ID": "Direito"},
         ]
     )
     planilha = pd.DataFrame(
@@ -72,7 +72,8 @@ def test_sem_proprietario_distingue_lead_ausente_e_caso_acionavel():
         "Inscrição sem lead correspondente",
     }
     assert len(rel.casos_acionaveis) == 1
-    assert rel.casos_acionaveis.iloc[0]["ID Lead"] == "L1"
+    assert rel.casos_acionaveis.iloc[0]["ID Lead"] == "{L1}"
+    assert rel.casos_acionaveis.iloc[0]["Inscrição Atual"] == "OUTRA-INSCRICAO"
 
 
 def test_divergencias_ignoram_consultor_e_separam_proprietario_nao_mapeado():

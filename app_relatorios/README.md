@@ -29,6 +29,8 @@ O navegador abrirá a visão executiva. As consultas ficam em cache por 15 minut
 - Somente inscrições com situação `Matriculado`.
 - Medicina é excluída.
 - Números de inscrição são aparados, convertidos para maiúsculas e consolidados como únicos.
+- Inscrições e leads são relacionados pelo ID do lead (`cad_clientepotencialid.#text` × `leadid`); chaves e diferenças de caixa são normalizadas.
+- O número de inscrição continua sendo a chave da reconciliação entre CRM e planilha.
 - Duplicidades permanecem disponíveis na aba de qualidade.
 - Inscrição sem lead e lead sem proprietário são ocorrências diferentes.
 - Consultores ignorados não entram em casos acionáveis nem em divergências.

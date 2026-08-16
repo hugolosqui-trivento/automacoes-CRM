@@ -26,7 +26,10 @@ def carregar_dados(settings: AppSettings) -> tuple[Relatorios, datetime]:
     cliente = CrmClient(settings.crm)
     leads = cliente.fetch_entity("lead", LEAD_ATTRIBUTES, LEAD_RENAME)
     inscricoes = cliente.fetch_entity(
-        "cad_inscricaocandidato", INSCRICAO_ATTRIBUTES, INSCRICAO_RENAME
+        "cad_inscricaocandidato",
+        INSCRICAO_ATTRIBUTES,
+        INSCRICAO_RENAME,
+        text_attributes={"cad_clientepotencialid"},
     )
     planilha = carregar_planilha(settings.matriculas_url, PLANILHA_ABAS)
     relatorios = gerar_relatorios(

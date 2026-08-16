@@ -36,7 +36,8 @@ INSCRICAO_ATTRIBUTES = [
 INSCRICAO_RENAME = {
     "cad_situacao": "Situação Inscrição",
     "cad_numeroinscricao": "Numero Inscricao",
-    "cad_clientepotencialid": "Nome CRM",
+    "cad_clientepotencialid": "ID Lead Inscrição",
+    "cad_clientepotencialid_name": "Nome CRM",
     "crmeduc_data_aprovacao": "Data Aprovação",
     "cad_datapagamento": "Data de Pagamento",
     "cad_situacaoavaliacao": "Situação de Avaliação",
