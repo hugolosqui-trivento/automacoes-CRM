@@ -43,7 +43,7 @@ matriculas_planilha = filtrar_por_unidade_lead(
     relatorios.matriculas_planilha, unidades_selecionadas
 )
 somente_crm, somente_planilha = calcular_exclusivos_matriculas(
-    matriculas_crm, matriculas_planilha
+    matriculas_crm, matriculas_planilha, relatorios.inscricoes_crm
 )
 mostrar_metricas(
     {
