@@ -54,6 +54,14 @@ def _fontes():
             {"Numero Inscricao": "CAN-003", "ID Lead Inscrição": "L3", "Situação Inscrição": "Matriculado", "Curso ID": "Direito"},
             {"Numero Inscricao": "CAN-004", "ID Lead Inscrição": "L4", "Situação Inscrição": "Matriculado", "Curso ID": "Direito"},
             {"Numero Inscricao": "CAN-005", "ID Lead Inscrição": "L5", "Situação Inscrição": "Matriculado", "Curso ID": "Medicina"},
+            {
+                "Numero Inscricao": "CAN-999",
+                "ID Lead Inscrição": "L999",
+                "Situação Inscrição": "Inscrito",
+                "Data Aprovação": "2026-08-20",
+                "Data de Pagamento": "2026-08-21",
+                "Curso ID": "Direito",
+            },
             {"Numero Inscricao": "CAN-001", "ID Lead Inscrição": "L1", "Situação Inscrição": "Matriculado", "Curso ID": "Direito"},
         ]
     )
@@ -76,6 +84,22 @@ def test_reconciliacao_normaliza_deduplica_e_exclui_medicina():
     assert len(rel.duplicidades_crm) == 2
     assert set(rel.somente_crm["Numero Inscricao"]) == {"CAN-003"}
     assert set(rel.somente_planilha["Número de Inscrição"]) == {"CAN-999"}
+
+
+def test_somente_planilha_recebe_dados_da_inscricao_apos_numero():
+    rel = gerar_relatorios(*_fontes(), MAPA, {"Bruno"})
+
+    colunas = list(rel.somente_planilha.columns)
+    posicao_numero = colunas.index("Número de Inscrição")
+    assert colunas[posicao_numero + 1 : posicao_numero + 4] == [
+        "Situação Inscrição",
+        "Data Aprovação",
+        "Data de Pagamento",
+    ]
+    registro = rel.somente_planilha.iloc[0]
+    assert registro["Situação Inscrição"] == "Inscrito"
+    assert registro["Data Aprovação"] == "2026-08-20"
+    assert registro["Data de Pagamento"] == "2026-08-21"
 
 
 def test_unidade_lead_prioriza_unidade_1_e_faz_fallback_para_unidade_2():
@@ -120,7 +144,7 @@ def test_exclusivos_sao_recalculados_dentro_da_unidade_filtrada():
         matriculas_planilha["Unidade Lead"].eq("Lorena")
     ]
     somente_crm, somente_planilha = calcular_exclusivos_matriculas(
-        crm_lorena, planilha_lorena
+        crm_lorena, planilha_lorena, rel.inscricoes_crm
     )
 
     assert somente_crm["Numero Inscricao"].tolist() == ["CAN-004"]

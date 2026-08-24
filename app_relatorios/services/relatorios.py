@@ -10,6 +10,11 @@ import pandas as pd
 
 INSCRICAO_KEY = "_inscricao_key"
 LEAD_KEY = "_lead_key"
+COLUNAS_INSCRICAO_SOMENTE_PLANILHA = [
+    "Situação Inscrição",
+    "Data Aprovação",
+    "Data de Pagamento",
+]
 UNIDADES_PADRAO = {
     "canaa": "Canaã",
     "lorena": "Lorena",
@@ -22,6 +27,7 @@ UNIDADES_PADRAO = {
 class Relatorios:
     matriculas_crm: pd.DataFrame
     matriculas_planilha: pd.DataFrame
+    inscricoes_crm: pd.DataFrame
     sem_proprietario: pd.DataFrame
     casos_acionaveis: pd.DataFrame
     divergencias: pd.DataFrame
@@ -120,6 +126,7 @@ def _ordenar_e_unificar(
 def calcular_exclusivos_matriculas(
     matriculas_crm: pd.DataFrame,
     matriculas_planilha: pd.DataFrame,
+    inscricoes_crm: pd.DataFrame | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Compara inscrições dentro do recorte já aplicado às duas fontes."""
     chaves_crm = set(matriculas_crm[INSCRICAO_KEY].dropna())
@@ -130,6 +137,27 @@ def calcular_exclusivos_matriculas(
     somente_planilha = matriculas_planilha.loc[
         matriculas_planilha[INSCRICAO_KEY].isin(chaves_planilha - chaves_crm)
     ].copy()
+
+    if inscricoes_crm is not None:
+        inscricoes_unicas = _ordenar_e_unificar(
+            inscricoes_crm, "Data Criação Inscrição"
+        )
+        dados_inscricao = inscricoes_unicas[[INSCRICAO_KEY]].copy()
+        for coluna in COLUNAS_INSCRICAO_SOMENTE_PLANILHA:
+            dados_inscricao[coluna] = inscricoes_unicas.get(coluna, pd.NA)
+
+        somente_planilha = somente_planilha.drop(
+            columns=COLUNAS_INSCRICAO_SOMENTE_PLANILHA,
+            errors="ignore",
+        ).merge(dados_inscricao, on=INSCRICAO_KEY, how="left", validate="many_to_one")
+
+        colunas = list(somente_planilha.columns)
+        for coluna in COLUNAS_INSCRICAO_SOMENTE_PLANILHA:
+            colunas.remove(coluna)
+        posicao = colunas.index("Número de Inscrição") + 1
+        colunas[posicao:posicao] = COLUNAS_INSCRICAO_SOMENTE_PLANILHA
+        somente_planilha = somente_planilha[colunas]
+
     return somente_crm, somente_planilha
 
 
@@ -243,12 +271,13 @@ def gerar_relatorios(
     )
 
     somente_crm, somente_planilha = calcular_exclusivos_matriculas(
-        captacao, planilha_com_unidade
+        captacao, planilha_com_unidade, inscricoes
     )
 
     return Relatorios(
         matriculas_crm=captacao,
         matriculas_planilha=planilha_com_unidade,
+        inscricoes_crm=inscricoes,
         sem_proprietario=com_consultor,
         casos_acionaveis=casos_acionaveis,
         divergencias=divergencias,
