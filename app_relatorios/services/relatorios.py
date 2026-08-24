@@ -117,6 +117,22 @@ def _ordenar_e_unificar(
     return resultado.drop_duplicates(chave, keep="first")
 
 
+def calcular_exclusivos_matriculas(
+    matriculas_crm: pd.DataFrame,
+    matriculas_planilha: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Compara inscrições dentro do recorte já aplicado às duas fontes."""
+    chaves_crm = set(matriculas_crm[INSCRICAO_KEY].dropna())
+    chaves_planilha = set(matriculas_planilha[INSCRICAO_KEY].dropna())
+    somente_crm = matriculas_crm.loc[
+        matriculas_crm[INSCRICAO_KEY].isin(chaves_crm - chaves_planilha)
+    ].copy()
+    somente_planilha = matriculas_planilha.loc[
+        matriculas_planilha[INSCRICAO_KEY].isin(chaves_planilha - chaves_crm)
+    ].copy()
+    return somente_crm, somente_planilha
+
+
 def gerar_relatorios(
     leads: pd.DataFrame,
     inscricoes: pd.DataFrame,
@@ -226,14 +242,9 @@ def gerar_relatorios(
         _padronizar_unidade
     )
 
-    chaves_crm = set(captacao[INSCRICAO_KEY].dropna())
-    chaves_planilha = set(planilha_unica[INSCRICAO_KEY].dropna())
-    somente_crm = captacao.loc[
-        captacao[INSCRICAO_KEY].isin(chaves_crm - chaves_planilha)
-    ].copy()
-    somente_planilha = planilha_com_unidade.loc[
-        planilha_com_unidade[INSCRICAO_KEY].isin(chaves_planilha - chaves_crm)
-    ].copy()
+    somente_crm, somente_planilha = calcular_exclusivos_matriculas(
+        captacao, planilha_com_unidade
+    )
 
     return Relatorios(
         matriculas_crm=captacao,
