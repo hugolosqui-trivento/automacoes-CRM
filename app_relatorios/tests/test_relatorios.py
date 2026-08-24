@@ -14,6 +14,8 @@ def _fontes():
                 "ID Lead": "{L1}",
                 "Nome Lead": "Lead 1",
                 "Proprietário": None,
+                "Unidade 1": "Itabirito",
+                "Unidade 2": "Altamira",
                 "Data Criação Lead": "2026-08-01",
             },
             {
@@ -21,6 +23,8 @@ def _fontes():
                 "ID Lead": "L2",
                 "Nome Lead": "Lead 2",
                 "Proprietário": "Dona A",
+                "Unidade 1": " ",
+                "Unidade 2": "Altamira",
                 "Data Criação Lead": "2026-08-02",
             },
             {
@@ -28,7 +32,18 @@ def _fontes():
                 "ID Lead": "L4",
                 "Nome Lead": "Lead 4",
                 "Proprietário": "Proprietário Novo",
+                "Unidade 1": None,
+                "Unidade 2": "Lorena",
                 "Data Criação Lead": "2026-08-04",
+            },
+            {
+                "Inscrição Atual": "CAN-999",
+                "ID Lead": "L999",
+                "Nome Lead": "Lead 999",
+                "Proprietário": "Dona A",
+                "Unidade 1": None,
+                "Unidade 2": "Canaã",
+                "Data Criação Lead": "2026-08-05",
             },
         ]
     )
@@ -61,6 +76,28 @@ def test_reconciliacao_normaliza_deduplica_e_exclui_medicina():
     assert len(rel.duplicidades_crm) == 2
     assert set(rel.somente_crm["Numero Inscricao"]) == {"CAN-003"}
     assert set(rel.somente_planilha["Número de Inscrição"]) == {"CAN-999"}
+
+
+def test_unidade_lead_prioriza_unidade_1_e_faz_fallback_para_unidade_2():
+    rel = gerar_relatorios(*_fontes(), MAPA, {"Bruno"})
+
+    unidades_crm = rel.matriculas_crm.set_index("Numero Inscricao")["Unidade Lead"]
+    assert unidades_crm["CAN-001"] == "Itabirito"
+    assert unidades_crm["CAN-002 "] == "Altamira"
+    assert unidades_crm["CAN-004"] == "Lorena"
+    assert "Unidade Lead" in rel.somente_crm
+    assert "Unidade Lead" in rel.somente_planilha
+    assert rel.somente_planilha.iloc[0]["Unidade Lead"] == "B"
+
+
+def test_planilha_usa_sua_propria_unidade_sem_relacionar_lead_por_inscricao():
+    rel = gerar_relatorios(*_fontes(), MAPA, {"Bruno"})
+
+    unidades_planilha = rel.matriculas_planilha.set_index("Número de Inscrição")[
+        "Unidade Lead"
+    ]
+    assert unidades_planilha["CAN-001"] == "A"
+    assert unidades_planilha["CAN-999"] == "B"
 
 
 def test_sem_proprietario_distingue_lead_ausente_e_caso_acionavel():
