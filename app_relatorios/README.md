@@ -32,6 +32,7 @@ O navegador abrirá a visão executiva. As consultas ficam em cache por 15 minut
 - Inscrições e leads são relacionados pelo ID do lead (`cad_clientepotencialid.#text` × `leadid`); chaves e diferenças de caixa são normalizadas.
 - O número de inscrição continua sendo a chave da reconciliação entre CRM e planilha.
 - A unidade do lead prioriza `Unidade 1` e usa `Unidade 2` quando a primeira está vazia.
+- As unidades são padronizadas como `Canaã`, `Lorena`, `Itabirito` ou `Altamira`; prefixos como `Medicina -` não aparecem no resultado.
 - Na comparação de matrículas, o CRM usa a unidade do lead relacionado pelo ID e a planilha usa sua própria coluna `Unidade`; o filtro afeta os cards e os registros exclusivos, mas não as duplicidades.
 - Duplicidades permanecem disponíveis na aba de qualidade.
 - Inscrição sem lead e lead sem proprietário são ocorrências diferentes.

@@ -14,7 +14,7 @@ def _fontes():
                 "ID Lead": "{L1}",
                 "Nome Lead": "Lead 1",
                 "Proprietário": None,
-                "Unidade 1": "Itabirito",
+                "Unidade 1": "Medicina - Itabirito",
                 "Unidade 2": "Altamira",
                 "Data Criação Lead": "2026-08-01",
             },
@@ -33,7 +33,7 @@ def _fontes():
                 "Nome Lead": "Lead 4",
                 "Proprietário": "Proprietário Novo",
                 "Unidade 1": None,
-                "Unidade 2": "Lorena",
+                "Unidade 2": "Unidade Lorena",
                 "Data Criação Lead": "2026-08-04",
             },
             {
@@ -42,7 +42,7 @@ def _fontes():
                 "Nome Lead": "Lead 999",
                 "Proprietário": "Dona A",
                 "Unidade 1": None,
-                "Unidade 2": "Canaã",
+                "Unidade 2": "Altamira",
                 "Data Criação Lead": "2026-08-05",
             },
         ]
@@ -59,10 +59,10 @@ def _fontes():
     )
     planilha = pd.DataFrame(
         [
-            {"Número de Inscrição": "CAN-001", "CONSULTOR (a)": "Ana", "Unidade": "A"},
-            {"Número de Inscrição": "CAN-002", "CONSULTOR (a)": "Bruno", "Unidade": "A"},
-            {"Número de Inscrição": "CAN-004", "CONSULTOR (a)": "Ana", "Unidade": "A"},
-            {"Número de Inscrição": "CAN-999", "CONSULTOR (a)": "Ana", "Unidade": "B"},
+            {"Número de Inscrição": "CAN-001", "CONSULTOR (a)": "Ana", "Unidade": "Itabirito"},
+            {"Número de Inscrição": "CAN-002", "CONSULTOR (a)": "Bruno", "Unidade": "ALTAMIRA"},
+            {"Número de Inscrição": "CAN-004", "CONSULTOR (a)": "Ana", "Unidade": "Unidade Lorena"},
+            {"Número de Inscrição": "CAN-999", "CONSULTOR (a)": "Ana", "Unidade": "Canaa"},
         ]
     )
     return leads, inscricoes, planilha
@@ -87,7 +87,8 @@ def test_unidade_lead_prioriza_unidade_1_e_faz_fallback_para_unidade_2():
     assert unidades_crm["CAN-004"] == "Lorena"
     assert "Unidade Lead" in rel.somente_crm
     assert "Unidade Lead" in rel.somente_planilha
-    assert rel.somente_planilha.iloc[0]["Unidade Lead"] == "B"
+    assert rel.somente_planilha.iloc[0]["Unidade Lead"] == "Canaã"
+    assert not unidades_crm.dropna().str.startswith("Medicina").any()
 
 
 def test_planilha_usa_sua_propria_unidade_sem_relacionar_lead_por_inscricao():
@@ -96,8 +97,10 @@ def test_planilha_usa_sua_propria_unidade_sem_relacionar_lead_por_inscricao():
     unidades_planilha = rel.matriculas_planilha.set_index("Número de Inscrição")[
         "Unidade Lead"
     ]
-    assert unidades_planilha["CAN-001"] == "A"
-    assert unidades_planilha["CAN-999"] == "B"
+    assert unidades_planilha["CAN-001"] == "Itabirito"
+    assert unidades_planilha["CAN-002"] == "Altamira"
+    assert unidades_planilha["CAN-004"] == "Lorena"
+    assert unidades_planilha["CAN-999"] == "Canaã"
 
 
 def test_sem_proprietario_distingue_lead_ausente_e_caso_acionavel():

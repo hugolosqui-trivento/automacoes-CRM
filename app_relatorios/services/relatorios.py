@@ -10,6 +10,12 @@ import pandas as pd
 
 INSCRICAO_KEY = "_inscricao_key"
 LEAD_KEY = "_lead_key"
+UNIDADES_PADRAO = {
+    "canaa": "Canaã",
+    "lorena": "Lorena",
+    "itabirito": "Itabirito",
+    "altamira": "Altamira",
+}
 
 
 @dataclass
@@ -79,17 +85,23 @@ def _texto_preenchido(serie: pd.Series) -> pd.Series:
     return serie.notna() & serie.astype("string").str.strip().ne("")
 
 
+def _padronizar_unidade(valor):
+    texto = _normalizar_texto(valor)
+    for identificador, unidade in UNIDADES_PADRAO.items():
+        if identificador in texto:
+            return unidade
+    return pd.NA
+
+
 def _consolidar_unidade_lead(leads: pd.DataFrame) -> pd.DataFrame:
     resultado = leads.copy()
     unidade_1 = resultado.get(
         "Unidade 1", pd.Series(pd.NA, index=resultado.index, dtype="object")
-    )
+    ).map(_padronizar_unidade)
     unidade_2 = resultado.get(
         "Unidade 2", pd.Series(pd.NA, index=resultado.index, dtype="object")
-    )
-    resultado["Unidade Lead"] = unidade_1.where(
-        _texto_preenchido(unidade_1), unidade_2
-    )
+    ).map(_padronizar_unidade)
+    resultado["Unidade Lead"] = unidade_1.fillna(unidade_2)
     return resultado
 
 
@@ -210,8 +222,8 @@ def gerar_relatorios(
         "Unidade",
         pd.Series(pd.NA, index=planilha_com_unidade.index, dtype="object"),
     )
-    planilha_com_unidade["Unidade Lead"] = unidade_planilha.where(
-        _texto_preenchido(unidade_planilha), pd.NA
+    planilha_com_unidade["Unidade Lead"] = unidade_planilha.map(
+        _padronizar_unidade
     )
 
     chaves_crm = set(captacao[INSCRICAO_KEY].dropna())
