@@ -2,6 +2,7 @@
 
 import streamlit as st
 
+from services.relatorios import calcular_exclusivos_matriculas
 from ui import (
     filtrar_por_unidade_lead,
     iniciar_pagina,
@@ -41,9 +42,8 @@ matriculas_crm = filtrar_por_unidade_lead(
 matriculas_planilha = filtrar_por_unidade_lead(
     relatorios.matriculas_planilha, unidades_selecionadas
 )
-somente_crm = filtrar_por_unidade_lead(relatorios.somente_crm, unidades_selecionadas)
-somente_planilha = filtrar_por_unidade_lead(
-    relatorios.somente_planilha, unidades_selecionadas
+somente_crm, somente_planilha = calcular_exclusivos_matriculas(
+    matriculas_crm, matriculas_planilha
 )
 mostrar_metricas(
     {

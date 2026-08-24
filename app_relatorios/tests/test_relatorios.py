@@ -1,6 +1,6 @@
 import pandas as pd
 
-from services.relatorios import gerar_relatorios
+from services.relatorios import calcular_exclusivos_matriculas, gerar_relatorios
 
 
 MAPA = {"Dona A": "Ana", "Dono B": "Bruno"}
@@ -101,6 +101,33 @@ def test_planilha_usa_sua_propria_unidade_sem_relacionar_lead_por_inscricao():
     assert unidades_planilha["CAN-002"] == "Altamira"
     assert unidades_planilha["CAN-004"] == "Lorena"
     assert unidades_planilha["CAN-999"] == "Canaã"
+
+
+def test_exclusivos_sao_recalculados_dentro_da_unidade_filtrada():
+    rel = gerar_relatorios(*_fontes(), MAPA, {"Bruno"})
+    matriculas_planilha = rel.matriculas_planilha.copy()
+    matriculas_planilha.loc[
+        matriculas_planilha["Número de Inscrição"].eq("CAN-002"), "Unidade Lead"
+    ] = "Lorena"
+    matriculas_planilha.loc[
+        matriculas_planilha["Número de Inscrição"].eq("CAN-004"), "Unidade Lead"
+    ] = "Altamira"
+
+    crm_lorena = rel.matriculas_crm.loc[
+        rel.matriculas_crm["Unidade Lead"].eq("Lorena")
+    ]
+    planilha_lorena = matriculas_planilha.loc[
+        matriculas_planilha["Unidade Lead"].eq("Lorena")
+    ]
+    somente_crm, somente_planilha = calcular_exclusivos_matriculas(
+        crm_lorena, planilha_lorena
+    )
+
+    assert somente_crm["Numero Inscricao"].tolist() == ["CAN-004"]
+    assert somente_planilha["Número de Inscrição"].tolist() == ["CAN-002"]
+    assert len(crm_lorena) - len(planilha_lorena) == len(somente_crm) - len(
+        somente_planilha
+    )
 
 
 def test_sem_proprietario_distingue_lead_ausente_e_caso_acionavel():
