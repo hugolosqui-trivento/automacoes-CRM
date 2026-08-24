@@ -66,6 +66,7 @@ def filtrar_dataframe(df: pd.DataFrame, prefixo: str) -> pd.DataFrame:
     candidatas = [
         "CONSULTOR (a)",
         "Unidade",
+        "Unidade Lead",
         "Unidade Inscrito",
         "Curso ID",
         "CURSO",
@@ -95,4 +96,13 @@ def mostrar_tabela(df: pd.DataFrame, prefixo: str) -> None:
     visivel = para_exibicao(filtrado)
     st.caption(f"{len(visivel):,} registro(s) exibido(s)".replace(",", "."))
     st.dataframe(visivel, use_container_width=True, hide_index=True)
+
+
+def filtrar_por_unidade_lead(
+    df: pd.DataFrame, unidades: list[str] | tuple[str, ...]
+) -> pd.DataFrame:
+    """Aplica o filtro executivo sem alterar bases que não possuem unidade do lead."""
+    if not unidades or "Unidade Lead" not in df:
+        return df.copy()
+    return df.loc[df["Unidade Lead"].astype("string").isin(unidades)].copy()
 

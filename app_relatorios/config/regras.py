@@ -7,6 +7,8 @@ LEAD_ATTRIBUTES = [
     "leadid",
     "createdon",
     "cad_proprietariopro",
+    "trivento_unidadetrivento",
+    "crmeduc_unidadeform",
 ]
 
 LEAD_RENAME = {
@@ -16,6 +18,8 @@ LEAD_RENAME = {
     "leadid": "ID Lead",
     "createdon": "Data Criação Lead",
     "cad_proprietariopro": "Proprietário",
+    "trivento_unidadetrivento": "Unidade 1",
+    "crmeduc_unidadeform": "Unidade 2",
 }
 
 INSCRICAO_ATTRIBUTES = [

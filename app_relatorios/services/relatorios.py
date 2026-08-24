@@ -10,6 +10,12 @@ import pandas as pd
 
 INSCRICAO_KEY = "_inscricao_key"
 LEAD_KEY = "_lead_key"
+UNIDADES_PADRAO = {
+    "canaa": "Canaã",
+    "lorena": "Lorena",
+    "itabirito": "Itabirito",
+    "altamira": "Altamira",
+}
 
 
 @dataclass
@@ -79,6 +85,26 @@ def _texto_preenchido(serie: pd.Series) -> pd.Series:
     return serie.notna() & serie.astype("string").str.strip().ne("")
 
 
+def _padronizar_unidade(valor):
+    texto = _normalizar_texto(valor)
+    for identificador, unidade in UNIDADES_PADRAO.items():
+        if identificador in texto:
+            return unidade
+    return pd.NA
+
+
+def _consolidar_unidade_lead(leads: pd.DataFrame) -> pd.DataFrame:
+    resultado = leads.copy()
+    unidade_1 = resultado.get(
+        "Unidade 1", pd.Series(pd.NA, index=resultado.index, dtype="object")
+    ).map(_padronizar_unidade)
+    unidade_2 = resultado.get(
+        "Unidade 2", pd.Series(pd.NA, index=resultado.index, dtype="object")
+    ).map(_padronizar_unidade)
+    resultado["Unidade Lead"] = unidade_1.fillna(unidade_2)
+    return resultado
+
+
 def _ordenar_e_unificar(
     df: pd.DataFrame,
     data: str | None = None,
@@ -98,7 +124,7 @@ def gerar_relatorios(
     proprietario_para_consultor: dict[str, str],
     consultores_ignorados: set[str],
 ) -> Relatorios:
-    leads = _com_chave_lead(leads, "ID Lead")
+    leads = _consolidar_unidade_lead(_com_chave_lead(leads, "ID Lead"))
     inscricoes = _com_chave(inscricoes, "Numero Inscricao")
     inscricoes = _com_chave_lead(inscricoes, "ID Lead Inscrição")
     planilha = _com_chave(planilha, "Número de Inscrição")
@@ -127,6 +153,7 @@ def gerar_relatorios(
             "Nome Lead",
             "CPF Lead",
             "Proprietário",
+            "Unidade Lead",
         ]
         if coluna in leads_unicos
     ]
@@ -190,16 +217,27 @@ def gerar_relatorios(
         != comparaveis["CONSULTOR (a)"].map(_normalizar_texto)
     ].copy()
 
-    chaves_crm = set(crm[INSCRICAO_KEY].dropna())
+    planilha_com_unidade = planilha_unica.copy()
+    unidade_planilha = planilha_com_unidade.get(
+        "Unidade",
+        pd.Series(pd.NA, index=planilha_com_unidade.index, dtype="object"),
+    )
+    planilha_com_unidade["Unidade Lead"] = unidade_planilha.map(
+        _padronizar_unidade
+    )
+
+    chaves_crm = set(captacao[INSCRICAO_KEY].dropna())
     chaves_planilha = set(planilha_unica[INSCRICAO_KEY].dropna())
-    somente_crm = crm.loc[crm[INSCRICAO_KEY].isin(chaves_crm - chaves_planilha)].copy()
-    somente_planilha = planilha_unica.loc[
-        planilha_unica[INSCRICAO_KEY].isin(chaves_planilha - chaves_crm)
+    somente_crm = captacao.loc[
+        captacao[INSCRICAO_KEY].isin(chaves_crm - chaves_planilha)
+    ].copy()
+    somente_planilha = planilha_com_unidade.loc[
+        planilha_com_unidade[INSCRICAO_KEY].isin(chaves_planilha - chaves_crm)
     ].copy()
 
     return Relatorios(
-        matriculas_crm=crm,
-        matriculas_planilha=planilha_unica,
+        matriculas_crm=captacao,
+        matriculas_planilha=planilha_com_unidade,
         sem_proprietario=com_consultor,
         casos_acionaveis=casos_acionaveis,
         divergencias=divergencias,
