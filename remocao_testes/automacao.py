@@ -16,10 +16,10 @@ def run(playwright: Playwright) -> None:
     # login
     page.goto("https://wakeme.crmeducacional.com/login/index.html?returnUrl=%2Fapp%2Fleads%2Findex.html")
     page.get_by_role("textbox", name="E-mail").fill("arthurmadeira@triventoeducacao.com.br")
-    page.get_by_role("textbox", name="Senha").fill("12345")
+    page.get_by_role("textbox", name="Senha").fill("123455678")
     page.get_by_role("button", name="Entrar").click()
 
-    sleep(5)  # aguarda 5 segundos para garantir que a página carregue completamente
+    sleep(30)  # aguarda 5 segundos para garantir que a página carregue completamente
 
 
     # iterar sobre as leads e excluir inscrições
