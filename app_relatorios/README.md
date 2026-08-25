@@ -28,6 +28,7 @@ O navegador abrirá a visão executiva. As consultas ficam em cache por 15 minut
 
 - Somente inscrições com situação `Matriculado`.
 - Medicina é excluída.
+- Formas de ingresso que contenham `Cursos Livres` ou `PAGAMENTO / INTEGRAÇÃO TOTVS` são excluídas.
 - Números de inscrição são aparados, convertidos para maiúsculas e consolidados como únicos.
 - Inscrições e leads são relacionados pelo ID do lead (`cad_clientepotencialid.#text` × `leadid`); chaves e diferenças de caixa são normalizadas.
 - O número de inscrição continua sendo a chave da reconciliação entre CRM e planilha.

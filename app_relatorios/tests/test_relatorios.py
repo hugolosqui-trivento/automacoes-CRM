@@ -86,6 +86,29 @@ def test_reconciliacao_normaliza_deduplica_e_exclui_medicina():
     assert set(rel.somente_planilha["Número de Inscrição"]) == {"CAN-999"}
 
 
+def test_exclui_inscricoes_com_formas_de_ingresso_ignoradas():
+    leads, inscricoes, planilha = _fontes()
+    inscricoes.loc[
+        inscricoes["Numero Inscricao"].eq("CAN-002 "), "Forma de Ingresso"
+    ] = "Vestibular - Cursos Livres"
+    inscricoes.loc[
+        inscricoes["Numero Inscricao"].eq("CAN-003"), "Forma de Ingresso"
+    ] = "PAGAMENTO / INTEGRAÇÃO TOTVS - Portal"
+
+    rel = gerar_relatorios(leads, inscricoes, planilha, MAPA, {"Bruno"})
+
+    assert set(rel.inscricoes_crm["Numero Inscricao"]) == {
+        "CAN-001",
+        "CAN-004",
+        "CAN-005",
+        "CAN-999",
+    }
+    assert set(rel.matriculas_crm["Numero Inscricao"]) == {
+        "CAN-001",
+        "CAN-004",
+    }
+
+
 def test_somente_planilha_recebe_dados_da_inscricao_apos_numero():
     rel = gerar_relatorios(*_fontes(), MAPA, {"Bruno"})
 
