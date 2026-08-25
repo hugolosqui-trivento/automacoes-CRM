@@ -99,6 +99,8 @@ def _padronizar_unidade(valor):
     texto = _normalizar_texto(valor)
     for identificador, unidade in UNIDADES_PADRAO.items():
         if identificador in texto:
+            if "medicina" in texto:
+                return f"Medicina - {unidade}"
             return unidade
     return pd.NA
 

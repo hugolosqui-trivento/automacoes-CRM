@@ -129,13 +129,12 @@ def test_unidade_lead_prioriza_unidade_1_e_faz_fallback_para_unidade_2():
     rel = gerar_relatorios(*_fontes(), MAPA, {"Bruno"})
 
     unidades_crm = rel.matriculas_crm.set_index("Numero Inscricao")["Unidade Lead"]
-    assert unidades_crm["CAN-001"] == "Itabirito"
+    assert unidades_crm["CAN-001"] == "Medicina - Itabirito"
     assert unidades_crm["CAN-002 "] == "Altamira"
     assert unidades_crm["CAN-004"] == "Lorena"
     assert "Unidade Lead" in rel.somente_crm
     assert "Unidade Lead" in rel.somente_planilha
     assert rel.somente_planilha.iloc[0]["Unidade Lead"] == "Canaã"
-    assert not unidades_crm.dropna().str.startswith("Medicina").any()
 
 
 def test_planilha_usa_sua_propria_unidade_sem_relacionar_lead_por_inscricao():
