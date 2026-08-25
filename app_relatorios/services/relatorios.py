@@ -21,6 +21,10 @@ UNIDADES_PADRAO = {
     "itabirito": "Itabirito",
     "altamira": "Altamira",
 }
+FORMAS_INGRESSO_IGNORADAS = {
+    "cursos livres",
+    "pagamento / integracao totvs",
+}
 
 
 @dataclass
@@ -171,6 +175,17 @@ def gerar_relatorios(
     leads = _consolidar_unidade_lead(_com_chave_lead(leads, "ID Lead"))
     inscricoes = _com_chave(inscricoes, "Numero Inscricao")
     inscricoes = _com_chave_lead(inscricoes, "ID Lead Inscrição")
+    forma_ingresso = inscricoes.get(
+        "Forma de Ingresso",
+        pd.Series(index=inscricoes.index, dtype="object"),
+    ).map(_normalizar_texto)
+    forma_ingresso_ignorada = forma_ingresso.map(
+        lambda valor: any(
+            forma_ignorada in valor
+            for forma_ignorada in FORMAS_INGRESSO_IGNORADAS
+        )
+    )
+    inscricoes = inscricoes.loc[~forma_ingresso_ignorada].copy()
     planilha = _com_chave(planilha, "Número de Inscrição")
 
     situacao = inscricoes.get("Situação Inscrição", pd.Series(index=inscricoes.index, dtype="object"))
