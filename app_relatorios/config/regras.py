@@ -81,5 +81,7 @@ PROPRIETARIO_PARA_CONSULTOR = {
     "Thalia Gabriela de Araújo Silva": "Thalia",
     "Camila Guimarães Santos": "Camila",
     "Breno Assis Ferreira": "Breno",
+    "Alana Mileyde de Souza Pinto":"Alana",
+    "Debora Soares": "Débora",
 }
 
