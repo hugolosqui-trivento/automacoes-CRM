@@ -362,7 +362,7 @@ def gerar_comparacao_medicina(
     matriculas_planilha = _ordenar_e_unificar(
         medicina_planilha_bruta, "DATA MATRÍCULA"
     )
-    if "Unidade Lead" in inscricoes:
+    if "Unidade Lead" not in matriculas_planilha and "Unidade Lead" in inscricoes:
         inscricoes_unicas = _ordenar_e_unificar(
             inscricoes, "Data Criação Inscrição"
         )
