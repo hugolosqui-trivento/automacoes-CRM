@@ -54,6 +54,16 @@ class Relatorios:
         }
 
 
+@dataclass
+class ComparacaoMedicina:
+    matriculas_crm: pd.DataFrame
+    matriculas_planilha: pd.DataFrame
+    somente_crm: pd.DataFrame
+    somente_planilha: pd.DataFrame
+    duplicidades_crm: pd.DataFrame
+    duplicidades_planilha: pd.DataFrame
+
+
 def _normalizar_texto(valor) -> str:
     if pd.isna(valor):
         return ""
@@ -299,6 +309,54 @@ def gerar_relatorios(
         casos_acionaveis=casos_acionaveis,
         divergencias=divergencias,
         proprietarios_nao_mapeados=nao_mapeados,
+        somente_crm=somente_crm,
+        somente_planilha=somente_planilha,
+        duplicidades_crm=duplicidades_crm,
+        duplicidades_planilha=duplicidades_planilha,
+    )
+
+
+def gerar_comparacao_medicina(
+    inscricoes: pd.DataFrame,
+    planilha_medicina: pd.DataFrame,
+) -> ComparacaoMedicina:
+    """Compara somente Medicina com sua planilha pelo número de inscrição."""
+    inscricoes = _com_chave(inscricoes, "Numero Inscricao")
+    planilha_medicina = _com_chave(planilha_medicina, "Número de Inscrição")
+
+    situacao = inscricoes.get(
+        "Situação Inscrição", pd.Series(index=inscricoes.index, dtype="object")
+    )
+    curso = inscricoes.get(
+        "Curso ID", pd.Series(index=inscricoes.index, dtype="object")
+    )
+    medicina_crm_bruto = inscricoes.loc[
+        situacao.map(_normalizar_texto).eq("matriculado")
+        & curso.map(_normalizar_texto).eq("medicina")
+    ].copy()
+    medicina_planilha_bruta = planilha_medicina.dropna(
+        subset=[INSCRICAO_KEY]
+    ).copy()
+
+    duplicidades_crm = medicina_crm_bruto[
+        medicina_crm_bruto.duplicated(INSCRICAO_KEY, keep=False)
+    ].copy()
+    duplicidades_planilha = medicina_planilha_bruta[
+        medicina_planilha_bruta.duplicated(INSCRICAO_KEY, keep=False)
+    ].copy()
+    matriculas_crm = _ordenar_e_unificar(
+        medicina_crm_bruto, "Data Criação Inscrição"
+    )
+    matriculas_planilha = _ordenar_e_unificar(
+        medicina_planilha_bruta, "DATA MATRÍCULA"
+    )
+    somente_crm, somente_planilha = calcular_exclusivos_matriculas(
+        matriculas_crm, matriculas_planilha, inscricoes
+    )
+
+    return ComparacaoMedicina(
+        matriculas_crm=matriculas_crm,
+        matriculas_planilha=matriculas_planilha,
         somente_crm=somente_crm,
         somente_planilha=somente_planilha,
         duplicidades_crm=duplicidades_crm,

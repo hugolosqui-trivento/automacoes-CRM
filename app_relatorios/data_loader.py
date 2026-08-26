@@ -17,7 +17,7 @@ from config.regras import (
     PROPRIETARIO_PARA_CONSULTOR,
 )
 from services.crm_api import CrmClient
-from services.planilha_matriculas import carregar_planilha
+from services.planilha_matriculas import carregar_planilha, carregar_planilha_medicina
 from services.relatorios import Relatorios, gerar_relatorios
 from settings import AppSettings
 
@@ -49,7 +49,6 @@ def _carregar_fontes(settings: AppSettings):
             settings.matriculas_url,
             PLANILHA_ABAS,
         )
-
         return (
             leads_future.result(),
             inscricoes_future.result(),
@@ -68,4 +67,10 @@ def carregar_dados(settings: AppSettings) -> tuple[Relatorios, datetime]:
         CONSULTORES_IGNORADOS,
     )
     return relatorios, datetime.now().astimezone()
+
+
+@st.cache_data(ttl=900, show_spinner="Consultando planilha de Medicina...")
+def carregar_dados_medicina(url: str):
+    """Carrega separadamente a fonte usada somente pela página de Medicina."""
+    return carregar_planilha_medicina(url)
 

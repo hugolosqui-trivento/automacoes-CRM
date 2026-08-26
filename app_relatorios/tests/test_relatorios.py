@@ -1,6 +1,10 @@
 import pandas as pd
 
-from services.relatorios import calcular_exclusivos_matriculas, gerar_relatorios
+from services.relatorios import (
+    calcular_exclusivos_matriculas,
+    gerar_comparacao_medicina,
+    gerar_relatorios,
+)
 
 
 MAPA = {"Dona A": "Ana", "Dono B": "Bruno"}
@@ -84,6 +88,51 @@ def test_reconciliacao_normaliza_deduplica_e_exclui_medicina():
     assert len(rel.duplicidades_crm) == 2
     assert set(rel.somente_crm["Numero Inscricao"]) == {"CAN-003"}
     assert set(rel.somente_planilha["Número de Inscrição"]) == {"CAN-999"}
+
+
+def test_reconciliacao_medicina_usa_numero_de_inscricao():
+    leads, inscricoes, planilha = _fontes()
+    planilha_medicina = pd.DataFrame(
+        [
+            {"Número de Inscrição": " can-005 ", "DATA MATRÍCULA": "2026-08-10"},
+            {"Número de Inscrição": "CAN-MED-PLAN", "DATA MATRÍCULA": "2026-08-11"},
+            {"Número de Inscrição": "CAN-MED-PLAN", "DATA MATRÍCULA": "2026-08-09"},
+        ]
+    )
+    inscricoes = pd.concat(
+        [
+            inscricoes,
+            pd.DataFrame(
+                [
+                    {
+                        "Numero Inscricao": "CAN-MED-CRM",
+                        "ID Lead Inscrição": "L6",
+                        "Situação Inscrição": "Matriculado",
+                        "Curso ID": "medicina",
+                    }
+                ]
+            ),
+        ],
+        ignore_index=True,
+    )
+
+    rel = gerar_comparacao_medicina(inscricoes, planilha_medicina)
+
+    assert set(rel.matriculas_crm["Numero Inscricao"]) == {
+        "CAN-005",
+        "CAN-MED-CRM",
+    }
+    assert set(rel.matriculas_planilha["Número de Inscrição"]) == {
+        " can-005 ",
+        "CAN-MED-PLAN",
+    }
+    assert rel.somente_crm["Numero Inscricao"].tolist() == [
+        "CAN-MED-CRM"
+    ]
+    assert rel.somente_planilha["Número de Inscrição"].tolist() == [
+        "CAN-MED-PLAN"
+    ]
+    assert len(rel.duplicidades_planilha) == 2
 
 
 def test_exclui_inscricoes_com_formas_de_ingresso_ignoradas():

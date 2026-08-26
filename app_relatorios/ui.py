@@ -8,7 +8,7 @@ import pandas as pd
 import streamlit as st
 
 from auth import exigir_autenticacao
-from data_loader import carregar_dados
+from data_loader import carregar_dados, carregar_dados_medicina
 from services.relatorios import Relatorios, para_exibicao
 from settings import AppSettings, carregar_settings, validar_settings
 
@@ -41,6 +41,7 @@ def _barra_lateral() -> None:
     st.sidebar.caption("CRM Educacional × planilha operacional")
     if st.sidebar.button("Atualizar dados agora", use_container_width=True):
         carregar_dados.clear()
+        carregar_dados_medicina.clear()
         st.rerun()
     if st.session_state.get("autenticado") and st.sidebar.button(
         "Sair", use_container_width=True
