@@ -353,19 +353,33 @@ def gerar_comparacao_medicina(
     matriculas_crm = _ordenar_e_unificar(
         medicina_crm_bruto, "Data Criação Inscrição"
     )
-    matriculas_planilha = _ordenar_e_unificar(
-        medicina_planilha_bruta, "DATA MATRÍCULA"
-    )
-    somente_crm, somente_planilha = calcular_exclusivos_matriculas(
-        matriculas_crm, matriculas_planilha, inscricoes
-    )
-    if "Unidade Lead" in somente_crm and "Numero Inscricao" in somente_crm:
-        colunas = list(somente_crm.columns)
+    if "Unidade Lead" in matriculas_crm and "Numero Inscricao" in matriculas_crm:
+        colunas = list(matriculas_crm.columns)
         colunas.remove("Unidade Lead")
         posicao = colunas.index("Numero Inscricao") + 1
         colunas.insert(posicao, "Unidade Lead")
-        somente_crm = somente_crm[colunas]
-
+        matriculas_crm = matriculas_crm[colunas]
+    matriculas_planilha = _ordenar_e_unificar(
+        medicina_planilha_bruta, "DATA MATRÍCULA"
+    )
+    if "Unidade Lead" in inscricoes:
+        inscricoes_unicas = _ordenar_e_unificar(
+            inscricoes, "Data Criação Inscrição"
+        )
+        unidades_por_inscricao = inscricoes_unicas[
+            [INSCRICAO_KEY, "Unidade Lead"]
+        ]
+        matriculas_planilha = matriculas_planilha.drop(
+            columns=["Unidade Lead"], errors="ignore"
+        ).merge(
+            unidades_por_inscricao,
+            on=INSCRICAO_KEY,
+            how="left",
+            validate="many_to_one",
+        )
+    somente_crm, somente_planilha = calcular_exclusivos_matriculas(
+        matriculas_crm, matriculas_planilha, inscricoes
+    )
     return ComparacaoMedicina(
         matriculas_crm=matriculas_crm,
         matriculas_planilha=matriculas_planilha,
