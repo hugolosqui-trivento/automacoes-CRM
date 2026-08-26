@@ -60,6 +60,11 @@ PLANILHA_ABAS = {
     "Canaã": "Canaã",
 }
 
+PLANILHA_MEDICINA_ABAS = {
+    "MEDICINA LORENA": "Medicina - Lorena",
+    "MEDICINA ALTAMIRA": "Medicina - Altamira",
+}
+
 CONSULTORES_IGNORADOS = {"Lorena", "Breno"}
 
 PROPRIETARIO_PARA_CONSULTOR = {

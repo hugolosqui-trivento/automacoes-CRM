@@ -228,6 +228,12 @@ def gerar_relatorios(
         ]
         if coluna in leads_unicos
     ]
+    colunas_unidade_lead = [
+        coluna for coluna in [LEAD_KEY, "Unidade Lead"] if coluna in leads_unicos
+    ]
+    inscricoes_com_lead = inscricoes.merge(
+        leads_unicos[colunas_unidade_lead], on=LEAD_KEY, how="left"
+    )
     captacao = crm.merge(leads_unicos[colunas_lead], on=LEAD_KEY, how="left")
     proprietario = captacao.get("Proprietário", pd.Series(index=captacao.index, dtype="object"))
     sem_proprietario = captacao.loc[~_texto_preenchido(proprietario)].copy()
@@ -304,7 +310,7 @@ def gerar_relatorios(
     return Relatorios(
         matriculas_crm=captacao,
         matriculas_planilha=planilha_com_unidade,
-        inscricoes_crm=inscricoes,
+        inscricoes_crm=inscricoes_com_lead,
         sem_proprietario=com_consultor,
         casos_acionaveis=casos_acionaveis,
         divergencias=divergencias,
@@ -347,13 +353,33 @@ def gerar_comparacao_medicina(
     matriculas_crm = _ordenar_e_unificar(
         medicina_crm_bruto, "Data Criação Inscrição"
     )
+    if "Unidade Lead" in matriculas_crm and "Numero Inscricao" in matriculas_crm:
+        colunas = list(matriculas_crm.columns)
+        colunas.remove("Unidade Lead")
+        posicao = colunas.index("Numero Inscricao") + 1
+        colunas.insert(posicao, "Unidade Lead")
+        matriculas_crm = matriculas_crm[colunas]
     matriculas_planilha = _ordenar_e_unificar(
         medicina_planilha_bruta, "DATA MATRÍCULA"
     )
+    if "Unidade Lead" not in matriculas_planilha and "Unidade Lead" in inscricoes:
+        inscricoes_unicas = _ordenar_e_unificar(
+            inscricoes, "Data Criação Inscrição"
+        )
+        unidades_por_inscricao = inscricoes_unicas[
+            [INSCRICAO_KEY, "Unidade Lead"]
+        ]
+        matriculas_planilha = matriculas_planilha.drop(
+            columns=["Unidade Lead"], errors="ignore"
+        ).merge(
+            unidades_por_inscricao,
+            on=INSCRICAO_KEY,
+            how="left",
+            validate="many_to_one",
+        )
     somente_crm, somente_planilha = calcular_exclusivos_matriculas(
         matriculas_crm, matriculas_planilha, inscricoes
     )
-
     return ComparacaoMedicina(
         matriculas_crm=matriculas_crm,
         matriculas_planilha=matriculas_planilha,

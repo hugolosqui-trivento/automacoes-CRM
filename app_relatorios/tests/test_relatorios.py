@@ -92,6 +92,9 @@ def test_reconciliacao_normaliza_deduplica_e_exclui_medicina():
 
 def test_reconciliacao_medicina_usa_numero_de_inscricao():
     leads, inscricoes, planilha = _fontes()
+    inscricoes.loc[
+        inscricoes["Numero Inscricao"].eq("CAN-005"), "ID Lead Inscrição"
+    ] = "L1"
     planilha_medicina = pd.DataFrame(
         [
             {"Número de Inscrição": " can-005 ", "DATA MATRÍCULA": "2026-08-10"},
@@ -106,7 +109,7 @@ def test_reconciliacao_medicina_usa_numero_de_inscricao():
                 [
                     {
                         "Numero Inscricao": "CAN-MED-CRM",
-                        "ID Lead Inscrição": "L6",
+                        "ID Lead Inscrição": "L2",
                         "Situação Inscrição": "Matriculado",
                         "Curso ID": "medicina",
                     }
@@ -116,7 +119,10 @@ def test_reconciliacao_medicina_usa_numero_de_inscricao():
         ignore_index=True,
     )
 
-    rel = gerar_comparacao_medicina(inscricoes, planilha_medicina)
+    relatorios = gerar_relatorios(leads, inscricoes, planilha, MAPA, {"Bruno"})
+    rel = gerar_comparacao_medicina(
+        relatorios.inscricoes_crm, planilha_medicina
+    )
 
     assert set(rel.matriculas_crm["Numero Inscricao"]) == {
         "CAN-005",
@@ -126,13 +132,41 @@ def test_reconciliacao_medicina_usa_numero_de_inscricao():
         " can-005 ",
         "CAN-MED-PLAN",
     }
+    unidades_planilha = rel.matriculas_planilha.set_index(
+        "Número de Inscrição"
+    )["Unidade Lead"]
+    assert unidades_planilha[" can-005 "] == "Medicina - Itabirito"
+    assert pd.isna(unidades_planilha["CAN-MED-PLAN"])
     assert rel.somente_crm["Numero Inscricao"].tolist() == [
         "CAN-MED-CRM"
     ]
+    assert rel.somente_crm.iloc[0]["Unidade Lead"] == "Altamira"
+    colunas_crm = list(rel.somente_crm.columns)
+    assert colunas_crm.index("Unidade Lead") == colunas_crm.index(
+        "Numero Inscricao"
+    ) + 1
     assert rel.somente_planilha["Número de Inscrição"].tolist() == [
         "CAN-MED-PLAN"
     ]
     assert len(rel.duplicidades_planilha) == 2
+
+    crm_altamira = rel.matriculas_crm.loc[
+        rel.matriculas_crm["Unidade Lead"].eq("Altamira")
+    ]
+    planilha_altamira = rel.matriculas_planilha.loc[
+        rel.matriculas_planilha["Unidade Lead"].eq("Altamira")
+    ]
+    somente_crm_altamira, somente_planilha_altamira = (
+        calcular_exclusivos_matriculas(
+            crm_altamira,
+            planilha_altamira,
+            relatorios.inscricoes_crm,
+        )
+    )
+    assert somente_crm_altamira["Numero Inscricao"].tolist() == [
+        "CAN-MED-CRM"
+    ]
+    assert somente_planilha_altamira.empty
 
 
 def test_exclui_inscricoes_com_formas_de_ingresso_ignoradas():

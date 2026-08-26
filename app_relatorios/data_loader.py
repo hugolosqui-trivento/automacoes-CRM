@@ -14,6 +14,7 @@ from config.regras import (
     LEAD_ATTRIBUTES,
     LEAD_RENAME,
     PLANILHA_ABAS,
+    PLANILHA_MEDICINA_ABAS,
     PROPRIETARIO_PARA_CONSULTOR,
 )
 from services.crm_api import CrmClient
@@ -72,5 +73,5 @@ def carregar_dados(settings: AppSettings) -> tuple[Relatorios, datetime]:
 @st.cache_data(ttl=900, show_spinner="Consultando planilha de Medicina...")
 def carregar_dados_medicina(url: str):
     """Carrega separadamente a fonte usada somente pela página de Medicina."""
-    return carregar_planilha_medicina(url)
+    return carregar_planilha_medicina(url, PLANILHA_MEDICINA_ABAS)
 
