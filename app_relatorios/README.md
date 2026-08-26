@@ -13,7 +13,9 @@ python -m pip install -r requirements.txt
 Copy-Item .streamlit\secrets.toml.example .streamlit\secrets.toml
 ```
 
-Preencha `.streamlit/secrets.toml` com as credenciais e a URL de exportação da planilha. Esse arquivo está ignorado pelo Git.
+Preencha `.streamlit/secrets.toml` com as credenciais, `MATRICULAS_URL` para a
+planilha operacional e `MATRICULAS_MEDICINA_URL` para a planilha exclusiva de
+Medicina. Esse arquivo está ignorado pelo Git.
 
 ## Execução e testes
 
@@ -27,11 +29,14 @@ O navegador abrirá a visão executiva. As consultas ficam em cache por 15 minut
 ## Regras aplicadas
 
 - Somente inscrições com situação `Matriculado`.
-- Medicina é excluída.
+- A comparação geral continua excluindo Medicina.
+- A página de Medicina usa sua planilha exclusiva e considera somente inscrições
+  matriculadas cujo curso seja `Medicina`.
 - Formas de ingresso que contenham `Cursos Livres` ou `PAGAMENTO / INTEGRAÇÃO TOTVS` são excluídas.
 - Números de inscrição são aparados, convertidos para maiúsculas e consolidados como únicos.
 - Inscrições e leads são relacionados pelo ID do lead (`cad_clientepotencialid.#text` × `leadid`); chaves e diferenças de caixa são normalizadas.
-- O número de inscrição continua sendo a chave da reconciliação entre CRM e planilha.
+- O número de inscrição continua sendo a chave da reconciliação entre CRM e cada
+  uma das planilhas.
 - A unidade do lead prioriza `Unidade 1` e usa `Unidade 2` quando a primeira está vazia.
 - As unidades são padronizadas como `Canaã`, `Lorena`, `Itabirito` ou `Altamira`; prefixos como `Medicina -` não aparecem no resultado.
 - Na comparação de matrículas, o CRM usa a unidade do lead relacionado pelo ID e a planilha usa sua própria coluna `Unidade`; o filtro afeta os cards e os registros exclusivos, mas não as duplicidades.

@@ -26,6 +26,7 @@ class AppSettings:
     matriculas_url: str
     app_env: str
     app_password: str
+    matriculas_medicina_url: str = ""
 
 
 def carregar_settings() -> AppSettings:
@@ -39,6 +40,7 @@ def carregar_settings() -> AppSettings:
         matriculas_url=_valor("MATRICULAS_URL"),
         app_env=_valor("APP_ENV", "development").casefold(),
         app_password=_valor("APP_PASSWORD"),
+        matriculas_medicina_url=_valor("MATRICULAS_MEDICINA_URL"),
     )
 
 

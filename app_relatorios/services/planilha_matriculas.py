@@ -13,3 +13,8 @@ def carregar_planilha(url: str, abas: dict[str, str]) -> pd.DataFrame:
         quadros.append(quadro)
     return pd.concat(quadros, ignore_index=True)
 
+
+def carregar_planilha_medicina(url: str) -> pd.DataFrame:
+    """Carrega a planilha exclusiva de Medicina, que possui uma unica aba."""
+    return pd.read_excel(url)
+
