@@ -228,6 +228,12 @@ def gerar_relatorios(
         ]
         if coluna in leads_unicos
     ]
+    colunas_unidade_lead = [
+        coluna for coluna in [LEAD_KEY, "Unidade Lead"] if coluna in leads_unicos
+    ]
+    inscricoes_com_lead = inscricoes.merge(
+        leads_unicos[colunas_unidade_lead], on=LEAD_KEY, how="left"
+    )
     captacao = crm.merge(leads_unicos[colunas_lead], on=LEAD_KEY, how="left")
     proprietario = captacao.get("Proprietário", pd.Series(index=captacao.index, dtype="object"))
     sem_proprietario = captacao.loc[~_texto_preenchido(proprietario)].copy()
@@ -304,7 +310,7 @@ def gerar_relatorios(
     return Relatorios(
         matriculas_crm=captacao,
         matriculas_planilha=planilha_com_unidade,
-        inscricoes_crm=inscricoes,
+        inscricoes_crm=inscricoes_com_lead,
         sem_proprietario=com_consultor,
         casos_acionaveis=casos_acionaveis,
         divergencias=divergencias,
@@ -353,6 +359,12 @@ def gerar_comparacao_medicina(
     somente_crm, somente_planilha = calcular_exclusivos_matriculas(
         matriculas_crm, matriculas_planilha, inscricoes
     )
+    if "Unidade Lead" in somente_crm and "Numero Inscricao" in somente_crm:
+        colunas = list(somente_crm.columns)
+        colunas.remove("Unidade Lead")
+        posicao = colunas.index("Numero Inscricao") + 1
+        colunas.insert(posicao, "Unidade Lead")
+        somente_crm = somente_crm[colunas]
 
     return ComparacaoMedicina(
         matriculas_crm=matriculas_crm,

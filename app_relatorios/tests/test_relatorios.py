@@ -106,7 +106,7 @@ def test_reconciliacao_medicina_usa_numero_de_inscricao():
                 [
                     {
                         "Numero Inscricao": "CAN-MED-CRM",
-                        "ID Lead Inscrição": "L6",
+                        "ID Lead Inscrição": "L2",
                         "Situação Inscrição": "Matriculado",
                         "Curso ID": "medicina",
                     }
@@ -116,7 +116,10 @@ def test_reconciliacao_medicina_usa_numero_de_inscricao():
         ignore_index=True,
     )
 
-    rel = gerar_comparacao_medicina(inscricoes, planilha_medicina)
+    relatorios = gerar_relatorios(leads, inscricoes, planilha, MAPA, {"Bruno"})
+    rel = gerar_comparacao_medicina(
+        relatorios.inscricoes_crm, planilha_medicina
+    )
 
     assert set(rel.matriculas_crm["Numero Inscricao"]) == {
         "CAN-005",
@@ -129,6 +132,11 @@ def test_reconciliacao_medicina_usa_numero_de_inscricao():
     assert rel.somente_crm["Numero Inscricao"].tolist() == [
         "CAN-MED-CRM"
     ]
+    assert rel.somente_crm.iloc[0]["Unidade Lead"] == "Altamira"
+    colunas_crm = list(rel.somente_crm.columns)
+    assert colunas_crm.index("Unidade Lead") == colunas_crm.index(
+        "Numero Inscricao"
+    ) + 1
     assert rel.somente_planilha["Número de Inscrição"].tolist() == [
         "CAN-MED-PLAN"
     ]
