@@ -61,6 +61,23 @@ def _localizar_coluna(df: pd.DataFrame, nomes: set[str]) -> str | None:
     )
 
 
+def _normalizar_unidade(valor) -> str | None:
+    texto = _normalizar_texto(valor)
+    if texto in UNIDADES_CONHECIDAS:
+        return UNIDADES_CONHECIDAS[texto]
+
+    if "medicina" in texto:
+        unidades_encontradas = [
+            unidade
+            for identificador, unidade in UNIDADES_CONHECIDAS.items()
+            if identificador in texto
+        ]
+        if len(unidades_encontradas) == 1:
+            return f"Medicina - {unidades_encontradas[0]}"
+
+    return None
+
+
 def carregar_csv_bi(conteudo: bytes) -> pd.DataFrame:
     """Lê CSV com separador detectado e os encodings usuais do Power BI."""
     if not conteudo:
@@ -102,8 +119,9 @@ def carregar_csv_bi(conteudo: bytes) -> pd.DataFrame:
 def comparar_matriculas_bi(
     matriculas_crm: pd.DataFrame,
     arquivo_bi: pd.DataFrame,
+    matriculas_medicina: pd.DataFrame | None = None,
 ) -> ComparacaoBI:
-    """Compara inscrições únicas, limitando o CRM às unidades presentes no CSV."""
+    """Compara inscrições únicas, incluindo Medicina quando sua base é informada."""
     bi = arquivo_bi.copy()
     bi[INSCRICAO_KEY] = (
         bi[COLUNA_INSCRICAO_BI]
@@ -120,20 +138,38 @@ def comparar_matriculas_bi(
     unidades: tuple[str, ...] = ()
     if COLUNA_UNIDADE_BI in bi:
         valores_unidade = {
-            _normalizar_texto(valor)
+            str(valor).strip()
             for valor in bi[COLUNA_UNIDADE_BI].dropna()
             if str(valor).strip()
         }
-        desconhecidas = sorted(valores_unidade - set(UNIDADES_CONHECIDAS))
+        unidades_normalizadas = {
+            valor: _normalizar_unidade(valor) for valor in valores_unidade
+        }
+        desconhecidas = sorted(
+            valor
+            for valor, unidade in unidades_normalizadas.items()
+            if unidade is None
+        )
         if desconhecidas:
             raise ArquivoBIInvalido(
                 "Unidade(s) não reconhecida(s) no CSV: "
                 + ", ".join(desconhecidas)
                 + "."
             )
-        unidades = tuple(sorted(UNIDADES_CONHECIDAS[valor] for valor in valores_unidade))
+        unidades = tuple(
+            sorted(
+                {
+                    unidade
+                    for unidade in unidades_normalizadas.values()
+                    if unidade is not None
+                }
+            )
+        )
 
     crm = matriculas_crm.copy()
+    if matriculas_medicina is not None:
+        crm = pd.concat([crm, matriculas_medicina], ignore_index=True)
+        crm = crm.drop_duplicates(INSCRICAO_KEY, keep="first")
     if unidades:
         if "Unidade Lead" not in crm:
             raise ArquivoBIInvalido(

@@ -72,6 +72,6 @@ def carregar_dados(settings: AppSettings) -> tuple[Relatorios, datetime]:
 
 @st.cache_data(ttl=900, show_spinner="Consultando planilha de Medicina...")
 def carregar_dados_medicina(url: str):
-    """Carrega separadamente a fonte usada somente pela página de Medicina."""
+    """Carrega separadamente a fonte de matrículas de Medicina."""
     return carregar_planilha_medicina(url, PLANILHA_MEDICINA_ABAS)
 

@@ -75,3 +75,34 @@ def test_unidade_desconhecida_e_rejeitada_para_evitar_comparacao_geral():
 
     with pytest.raises(ArquivoBIInvalido, match="não reconhecida"):
         comparar_matriculas_bi(_crm(), arquivo)
+
+
+def test_inclui_matriculas_de_medicina_e_filtra_por_unidade_do_csv():
+    medicina = pd.DataFrame(
+        [
+            {
+                "Numero Inscricao": "MED-001",
+                INSCRICAO_KEY: "MED-001",
+                "Unidade Lead": "Medicina - Lorena",
+            },
+            {
+                "Numero Inscricao": "MED-002",
+                INSCRICAO_KEY: "MED-002",
+                "Unidade Lead": "Medicina - Altamira",
+            },
+        ]
+    )
+    arquivo = pd.DataFrame(
+        {
+            "Número de Inscrição": ["MED-001", "MED-003"],
+            "Unidade": ["Medicina - Lorena", "MEDICINA LORENA"],
+        }
+    )
+
+    resultado = comparar_matriculas_bi(_crm(), arquivo, medicina)
+
+    assert resultado.unidades == ("Medicina - Lorena",)
+    assert resultado.matriculas_crm[INSCRICAO_KEY].tolist() == ["MED-001"]
+    assert resultado.em_ambas == 1
+    assert resultado.somente_crm.empty
+    assert resultado.somente_bi["Número de Inscrição"].tolist() == ["MED-003"]
