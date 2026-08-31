@@ -6,7 +6,7 @@ from services.relatorios import calcular_exclusivos_matriculas
 from ui import (
     filtrar_por_unidade_lead,
     iniciar_pagina,
-    mostrar_atualizacao,
+    mostrar_cabecalho,
     mostrar_metricas,
     mostrar_tabela,
 )
@@ -14,12 +14,12 @@ from ui import (
 
 relatorios, atualizado_em = iniciar_pagina("Comparação de matrículas", "🔄")
 
-st.title("Comparação de matrículas")
-st.write(
+mostrar_cabecalho(
+    "Comparação de matrículas",
     "Reconciliação por número de inscrição único e normalizado, considerando somente "
-    "matriculados e excluindo Medicina."
+    "matriculados e excluindo Medicina.",
+    atualizado_em,
 )
-mostrar_atualizacao(atualizado_em)
 
 unidades_disponiveis = sorted(
     {

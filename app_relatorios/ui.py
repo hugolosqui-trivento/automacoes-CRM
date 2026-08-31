@@ -11,10 +11,12 @@ from auth import exigir_autenticacao
 from data_loader import carregar_dados, carregar_dados_medicina
 from services.relatorios import Relatorios, para_exibicao
 from settings import AppSettings, carregar_settings, validar_settings
+from styles import aplicar_estilos
 
 
 def iniciar_pagina(titulo: str, icone: str = "📊") -> tuple[Relatorios, datetime]:
     st.set_page_config(page_title=titulo, page_icon=icone, layout="wide")
+    aplicar_estilos()
     settings = carregar_settings()
     exigir_autenticacao(settings.app_password)
     _validar_configuracao(settings)
@@ -37,8 +39,10 @@ def _validar_configuracao(settings: AppSettings) -> None:
 
 
 def _barra_lateral() -> None:
-    st.sidebar.title("Relatórios de captação")
-    st.sidebar.caption("CRM Educacional × planilha operacional")
+    st.sidebar.markdown("## Trivento")
+    st.sidebar.caption("INTELIGÊNCIA COMERCIAL")
+    st.sidebar.markdown("---")
+    st.sidebar.caption("CENTRAL DE RELATÓRIOS")
     if st.sidebar.button("Atualizar dados agora", use_container_width=True):
         carregar_dados.clear()
         carregar_dados_medicina.clear()
@@ -52,6 +56,36 @@ def _barra_lateral() -> None:
 
 def mostrar_atualizacao(instante: datetime) -> None:
     st.caption(f"Dados atualizados em {instante:%d/%m/%Y às %H:%M:%S %Z} · cache de 15 minutos")
+
+
+def mostrar_cabecalho(titulo: str, descricao: str, instante: datetime) -> None:
+    """Mostra o cabeçalho institucional das páginas autenticadas."""
+    st.markdown(
+        f"""
+        <section class="app-header">
+            <div class="brand-lockup">
+                <div class="brand-name">Tri<span>vento</span></div>
+                <div class="brand-tagline">Educação</div>
+            </div>
+            <div class="header-copy">
+                <h1>{_escapar_html(titulo)}</h1>
+                <p>{_escapar_html(descricao)}</p>
+            </div>
+            <div class="updated-at">Atualizado em {instante:%d/%m/%Y %H:%M}</div>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def _escapar_html(valor: str) -> str:
+    return (
+        valor.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&#x27;")
+    )
 
 
 def mostrar_metricas(metricas: dict[str, int], colunas: int = 4) -> None:

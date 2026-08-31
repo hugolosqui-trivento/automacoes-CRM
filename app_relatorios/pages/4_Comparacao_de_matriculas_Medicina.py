@@ -11,7 +11,7 @@ from settings import carregar_settings
 from ui import (
     filtrar_por_unidade_lead,
     iniciar_pagina,
-    mostrar_atualizacao,
+    mostrar_cabecalho,
     mostrar_metricas,
     mostrar_tabela,
 )
@@ -35,12 +35,12 @@ comparacao = gerar_comparacao_medicina(
     relatorios.inscricoes_crm, planilha_medicina
 )
 
-st.title("Comparação de matrículas de Medicina")
-st.write(
+mostrar_cabecalho(
+    "Comparação de matrículas de Medicina",
     "Reconciliação das matrículas de Medicina entre o CRM e a planilha exclusiva, "
-    "pelo número de inscrição único e normalizado."
+    "pelo número de inscrição único e normalizado.",
+    atualizado_em,
 )
-mostrar_atualizacao(atualizado_em)
 
 unidades_disponiveis = sorted(
     {

@@ -2,17 +2,17 @@
 
 import streamlit as st
 
-from ui import iniciar_pagina, mostrar_atualizacao, mostrar_metricas, mostrar_tabela
+from ui import iniciar_pagina, mostrar_cabecalho, mostrar_metricas, mostrar_tabela
 
 
 relatorios, atualizado_em = iniciar_pagina("Leads sem proprietário", "👤")
 
-st.title("Leads sem proprietário")
-st.write(
+mostrar_cabecalho(
+    "Leads sem proprietário",
     "Separa leads realmente sem proprietário de inscrições que não encontraram "
-    "um lead correspondente, e confronta proprietário com consultor."
+    "um lead correspondente, e confronta proprietário com consultor.",
+    atualizado_em,
 )
-mostrar_atualizacao(atualizado_em)
 mostrar_metricas(
     {
         "Sem proprietário": len(relatorios.sem_proprietario),

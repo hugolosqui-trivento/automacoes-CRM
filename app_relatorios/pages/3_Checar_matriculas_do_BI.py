@@ -10,7 +10,7 @@ from services.comparacao_bi import (
 )
 from services.relatorios import gerar_comparacao_medicina
 from settings import carregar_settings
-from ui import iniciar_pagina, mostrar_atualizacao, mostrar_metricas, mostrar_tabela
+from ui import iniciar_pagina, mostrar_cabecalho, mostrar_metricas, mostrar_tabela
 
 
 COLUNAS_CRM_VISIVEIS = [
@@ -33,12 +33,12 @@ relatorios, atualizado_em = iniciar_pagina(
     "Checar matrículas do BI", ":material/fact_check:"
 )
 
-st.title("Checar matrículas do BI")
-st.write(
+mostrar_cabecalho(
+    "Checar matrículas do BI",
     "Envie uma exportação CSV de matriculados do Power BI para compará-la com as "
-    "matrículas carregadas do CRM via API."
+    "matrículas carregadas do CRM via API.",
+    atualizado_em,
 )
-mostrar_atualizacao(atualizado_em)
 
 arquivo = st.file_uploader(
     "Arquivo CSV do Power BI",

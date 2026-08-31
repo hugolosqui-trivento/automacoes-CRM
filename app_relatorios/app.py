@@ -2,17 +2,17 @@
 
 import streamlit as st
 
-from ui import iniciar_pagina, mostrar_atualizacao, mostrar_metricas
+from ui import iniciar_pagina, mostrar_cabecalho, mostrar_metricas
 
 
 relatorios, atualizado_em = iniciar_pagina("Visão executiva")
 
-st.title("Visão executiva")
-st.write(
+mostrar_cabecalho(
+    "Visão executiva",
     "Acompanhamento da atribuição dos leads e da consistência das matrículas "
-    "entre o CRM Educacional e a planilha operacional."
+    "entre o CRM Educacional e a planilha operacional.",
+    atualizado_em,
 )
-mostrar_atualizacao(atualizado_em)
 mostrar_metricas(relatorios.metricas)
 
 st.subheader("Pontos para decisão")
