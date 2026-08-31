@@ -30,11 +30,13 @@ unidades_disponiveis = sorted(
         if str(unidade).strip()
     }
 )
-unidades_selecionadas = st.multiselect(
-    "Unidade Lead",
-    unidades_disponiveis,
-    placeholder="Todas as unidades",
-)
+coluna_filtro, _ = st.columns(2)
+with coluna_filtro:
+    unidades_selecionadas = st.multiselect(
+        "Unidade Lead",
+        unidades_disponiveis,
+        placeholder="Todas as unidades",
+    )
 
 matriculas_crm = filtrar_por_unidade_lead(
     relatorios.matriculas_crm, unidades_selecionadas

@@ -138,6 +138,36 @@ def aplicar_estilos() -> None:
             border-radius: .55rem;
         }
 
+        /* Mantém o carregamento das fontes visível e centralizado. */
+        [data-testid="stSpinner"] {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            width: 100vw;
+            height: 100vh;
+            padding: 0;
+            background: rgba(245,248,252,.82);
+            backdrop-filter: blur(3px);
+        }
+        [data-testid="stSpinner"] > div:first-child,
+        [data-testid="stSpinner"] svg {
+            width: 25vh !important;
+            height: 25vh !important;
+            color: var(--brand) !important;
+        }
+        [data-testid="stSpinner"] p {
+            margin: 0;
+            color: var(--brand-dark);
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
         .stTabs [data-baseweb="tab-list"] {
             gap: .35rem;
             padding: .3rem;
