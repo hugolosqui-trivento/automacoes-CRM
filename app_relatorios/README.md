@@ -32,6 +32,8 @@ O navegador abrirá a visão executiva. As consultas ficam em cache por 15 minut
 - A comparação geral continua excluindo Medicina.
 - A página de Medicina usa sua planilha exclusiva e considera somente inscrições
   matriculadas cujo curso seja `Medicina`.
+- A conferência do CSV do Power BI combina as matrículas gerais e de Medicina do
+  CRM e aceita unidades como `Medicina - Lorena` e `Medicina - Altamira`.
 - Formas de ingresso que contenham `Cursos Livres` ou `PAGAMENTO / INTEGRAÇÃO TOTVS` são excluídas.
 - Números de inscrição são aparados, convertidos para maiúsculas e consolidados como únicos.
 - Inscrições e leads são relacionados pelo ID do lead (`cad_clientepotencialid.#text` × `leadid`); chaves e diferenças de caixa são normalizadas.

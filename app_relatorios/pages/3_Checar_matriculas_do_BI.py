@@ -2,11 +2,14 @@
 
 import streamlit as st
 
+from data_loader import carregar_dados_medicina
 from services.comparacao_bi import (
     ArquivoBIInvalido,
     carregar_csv_bi,
     comparar_matriculas_bi,
 )
+from services.relatorios import gerar_comparacao_medicina
+from settings import carregar_settings
 from ui import iniciar_pagina, mostrar_atualizacao, mostrar_metricas, mostrar_tabela
 
 
@@ -50,13 +53,39 @@ if arquivo is None:
 
 try:
     dados_bi = carregar_csv_bi(arquivo.getvalue())
-    comparacao = comparar_matriculas_bi(relatorios.matriculas_crm, dados_bi)
 except ArquivoBIInvalido as exc:
     st.error(str(exc))
     st.stop()
 
+settings = carregar_settings()
+if not settings.matriculas_medicina_url:
+    st.error("Configuração incompleta: MATRICULAS_MEDICINA_URL")
+    st.stop()
+
+try:
+    planilha_medicina = carregar_dados_medicina(
+        settings.matriculas_medicina_url
+    )
+    matriculas_medicina = gerar_comparacao_medicina(
+        relatorios.inscricoes_crm, planilha_medicina
+    ).matriculas_crm
+    comparacao = comparar_matriculas_bi(
+        relatorios.matriculas_crm,
+        dados_bi,
+        matriculas_medicina,
+    )
+except ArquivoBIInvalido as exc:
+    st.error(str(exc))
+    st.stop()
+except Exception as exc:
+    st.error(f"Falha ao carregar a planilha de Medicina: {exc}")
+    st.info("Confira o secret MATRICULAS_MEDICINA_URL e o acesso à planilha.")
+    st.stop()
+
 escopo = ", ".join(comparacao.unidades) if comparacao.unidades else "Todas as unidades"
-st.caption(f"Arquivo: {arquivo.name} · Escopo aplicado ao CRM: {escopo}")
+st.caption(
+    f"Arquivo: {arquivo.name} · Escopo aplicado ao CRM, incluindo Medicina: {escopo}"
+)
 
 mostrar_metricas(
     {
