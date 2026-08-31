@@ -202,7 +202,7 @@ def gerar_relatorios(
 
     situacao = inscricoes.get("Situação Inscrição", pd.Series(index=inscricoes.index, dtype="object"))
     curso = inscricoes.get("Curso ID", pd.Series(index=inscricoes.index, dtype="object"))
-    matriculado = situacao.map(_normalizar_texto).eq("matriculado")
+    matriculado = situacao.map(_normalizar_texto).isin({"matriculado", "desistente"})
     nao_medicina = ~curso.map(_normalizar_texto).eq("medicina")
     crm_bruto = inscricoes.loc[matriculado & nao_medicina].copy()
     planilha_bruta = planilha.dropna(subset=[INSCRICAO_KEY]).copy()
@@ -337,7 +337,7 @@ def gerar_comparacao_medicina(
         "Curso ID", pd.Series(index=inscricoes.index, dtype="object")
     )
     medicina_crm_bruto = inscricoes.loc[
-        situacao.map(_normalizar_texto).eq("matriculado")
+        situacao.map(_normalizar_texto).isin({"matriculado", "desistente"})
         & curso.map(_normalizar_texto).eq("medicina")
     ].copy()
     medicina_planilha_bruta = planilha_medicina.dropna(

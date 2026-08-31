@@ -90,6 +90,23 @@ def test_reconciliacao_normaliza_deduplica_e_exclui_medicina():
     assert set(rel.somente_planilha["Número de Inscrição"]) == {"CAN-999"}
 
 
+def test_reconciliacao_considera_desistente_como_matriculado():
+    leads, inscricoes, planilha = _fontes()
+    inscricoes.loc[
+        inscricoes["Numero Inscricao"].isin(["CAN-004", "CAN-005"]),
+        "Situação Inscrição",
+    ] = "Desistente"
+
+    relatorios = gerar_relatorios(leads, inscricoes, planilha, MAPA, {"Bruno"})
+    rel = gerar_comparacao_medicina(
+        relatorios.inscricoes_crm,
+        pd.DataFrame({"Número de Inscrição": ["CAN-005"]}),
+    )
+
+    assert "CAN-004" in set(relatorios.matriculas_crm["Numero Inscricao"])
+    assert "CAN-005" in set(rel.matriculas_crm["Numero Inscricao"])
+
+
 def test_reconciliacao_medicina_usa_numero_de_inscricao():
     leads, inscricoes, planilha = _fontes()
     inscricoes.loc[
