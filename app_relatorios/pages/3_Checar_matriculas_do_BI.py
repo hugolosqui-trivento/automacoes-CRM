@@ -5,7 +5,7 @@ import streamlit as st
 from data_loader import carregar_dados_medicina
 from services.comparacao_bi import (
     ArquivoBIInvalido,
-    carregar_csv_bi,
+    carregar_arquivo_bi,
     comparar_matriculas_bi,
 )
 from services.relatorios import gerar_comparacao_medicina
@@ -35,24 +35,25 @@ relatorios, atualizado_em = iniciar_pagina(
 
 mostrar_cabecalho(
     "Checar matrículas do BI",
-    "Envie uma exportação CSV de matriculados do Power BI para compará-la com as "
+    "Envie uma exportação CSV ou XLSX de matriculados do Power BI para "
+    "compará-la com as "
     "matrículas carregadas do CRM via API.",
     atualizado_em,
 )
 
 arquivo = st.file_uploader(
-    "Arquivo CSV do Power BI",
-    type="csv",
+    "Arquivo do Power BI (CSV ou XLSX)",
+    type=["csv", "xlsx"],
     key="arquivo_matriculas_bi",
     help="O arquivo deve conter a coluna 'Numero Inscricao' e, de preferência, 'Unidade'.",
 )
 
 if arquivo is None:
-    st.info("Envie o arquivo CSV para gerar a conferência.")
+    st.info("Envie o arquivo CSV ou XLSX para gerar a conferência.")
     st.stop()
 
 try:
-    dados_bi = carregar_csv_bi(arquivo.getvalue())
+    dados_bi = carregar_arquivo_bi(arquivo.getvalue(), arquivo.name)
 except ArquivoBIInvalido as exc:
     st.error(str(exc))
     st.stop()
@@ -90,7 +91,7 @@ st.caption(
 mostrar_metricas(
     {
         "Matrículas do CRM via API": len(comparacao.matriculas_crm),
-        "Matrículas únicas no CSV": len(comparacao.matriculas_bi),
+        "Matrículas únicas no arquivo": len(comparacao.matriculas_bi),
         "Presentes em ambos": comparacao.em_ambas,
         "Somente no CRM": len(comparacao.somente_crm),
         "Somente no BI": len(comparacao.somente_bi),
@@ -100,12 +101,12 @@ mostrar_metricas(
 
 if comparacao.linhas_arquivo != len(comparacao.matriculas_bi):
     st.warning(
-        f"O CSV possui {comparacao.linhas_arquivo} linha(s), mas "
+        f"O arquivo possui {comparacao.linhas_arquivo} linha(s), mas "
         f"{len(comparacao.matriculas_bi)} inscrição(ões) única(s) válida(s)."
     )
 
 aba_crm, aba_bi, aba_qualidade = st.tabs(
-    ["Somente no CRM", "Somente no BI", "Qualidade do CSV"]
+    ["Somente no CRM", "Somente no BI", "Qualidade do arquivo"]
 )
 with aba_crm:
     colunas = [coluna for coluna in COLUNAS_CRM_VISIVEIS if coluna in comparacao.somente_crm]
@@ -123,7 +124,7 @@ with aba_bi:
 
 with aba_qualidade:
     if comparacao.duplicidades_bi.empty:
-        st.success("O CSV não contém inscrições duplicadas.")
+        st.success("O arquivo não contém inscrições duplicadas.")
     else:
         st.warning(
             f"Foram encontradas {len(comparacao.duplicidades_bi)} linha(s) envolvendo "

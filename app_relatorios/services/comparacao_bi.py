@@ -1,4 +1,4 @@
-"""Leitura e reconciliação de exportações CSV do Power BI com o CRM."""
+"""Leitura e reconciliação de exportações do Power BI com o CRM."""
 
 from __future__ import annotations
 
@@ -100,13 +100,37 @@ def carregar_csv_bi(conteudo: bytes) -> pd.DataFrame:
             "Não foi possível ler o CSV. Exporte-o novamente em UTF-8."
         ) from ultimo_erro
 
+    return _validar_colunas_bi(dataframe, "CSV")
+
+
+def carregar_arquivo_bi(conteudo: bytes, nome_arquivo: str) -> pd.DataFrame:
+    """Lê uma exportação CSV ou XLSX do Power BI."""
+    if not conteudo:
+        raise ArquivoBIInvalido("O arquivo enviado está vazio.")
+
+    extensao = nome_arquivo.rsplit(".", maxsplit=1)[-1].casefold()
+    if extensao == "csv":
+        return carregar_csv_bi(conteudo)
+    if extensao == "xlsx":
+        try:
+            dataframe = pd.read_excel(BytesIO(conteudo))
+        except (ValueError, OSError, ImportError) as exc:
+            raise ArquivoBIInvalido(
+                "Não foi possível ler o XLSX. Exporte-o novamente pelo Power BI."
+            ) from exc
+        return _validar_colunas_bi(dataframe, "XLSX")
+
+    raise ArquivoBIInvalido("Formato não aceito. Envie um arquivo CSV ou XLSX.")
+
+
+def _validar_colunas_bi(dataframe: pd.DataFrame, formato: str) -> pd.DataFrame:
     coluna_inscricao = _localizar_coluna(
         dataframe,
         {"Numero Inscricao", "Número de Inscrição", "Numero de Inscricao"},
     )
     if coluna_inscricao is None:
         raise ArquivoBIInvalido(
-            "O CSV não contém a coluna 'Numero Inscricao'."
+            f"O {formato} não contém a coluna 'Numero Inscricao'."
         )
 
     renomear = {coluna_inscricao: COLUNA_INSCRICAO_BI}

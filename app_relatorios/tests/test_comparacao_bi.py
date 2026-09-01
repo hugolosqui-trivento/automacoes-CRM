@@ -1,8 +1,11 @@
+from io import BytesIO
+
 import pandas as pd
 import pytest
 
 from services.comparacao_bi import (
     ArquivoBIInvalido,
+    carregar_arquivo_bi,
     carregar_csv_bi,
     comparar_matriculas_bi,
 )
@@ -30,6 +33,23 @@ def test_le_csv_do_power_bi_em_utf8_e_normaliza_nome_da_coluna():
     assert set(resultado.matriculas_crm[INSCRICAO_KEY]) == {"CAN-001", "CAN-002"}
     assert resultado.em_ambas == 1
     assert resultado.somente_crm["Numero Inscricao"].tolist() == ["CAN-002"]
+    assert resultado.somente_bi["Número de Inscrição"].tolist() == ["CAN-004"]
+
+
+def test_le_xlsx_do_power_bi_e_normaliza_nome_da_coluna():
+    conteudo = BytesIO()
+    pd.DataFrame(
+        {
+            "Numero Inscricao": [" can-001 ", "CAN-004"],
+            "Unidade": ["Lorena", "Lorena"],
+        }
+    ).to_excel(conteudo, index=False)
+
+    arquivo = carregar_arquivo_bi(conteudo.getvalue(), "matriculas.XLSX")
+    resultado = comparar_matriculas_bi(_crm(), arquivo)
+
+    assert resultado.unidades == ("Lorena",)
+    assert resultado.em_ambas == 1
     assert resultado.somente_bi["Número de Inscrição"].tolist() == ["CAN-004"]
 
 
