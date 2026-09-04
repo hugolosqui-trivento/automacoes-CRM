@@ -41,19 +41,6 @@ class Relatorios:
     duplicidades_crm: pd.DataFrame
     duplicidades_planilha: pd.DataFrame
 
-    @property
-    def metricas(self) -> dict[str, int]:
-        return {
-            "Matrículas no CRM": len(self.matriculas_crm),
-            "Matrículas na planilha": len(self.matriculas_planilha),
-            "Sem proprietário": len(self.sem_proprietario),
-            "Casos acionáveis": len(self.casos_acionaveis),
-            "Divergências": len(self.divergencias),
-            "Somente no CRM": len(self.somente_crm),
-            "Somente na planilha": len(self.somente_planilha),
-        }
-
-
 @dataclass
 class ComparacaoMedicina:
     matriculas_crm: pd.DataFrame

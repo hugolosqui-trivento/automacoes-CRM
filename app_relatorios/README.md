@@ -24,7 +24,7 @@ python -m pytest
 streamlit run app.py
 ```
 
-O navegador abrirá a visão executiva. As consultas ficam em cache por 15 minutos; o botão **Atualizar dados agora** invalida o cache e cria uma nova fotografia comum a todas as páginas.
+O navegador abrirá a página de leads sem proprietário. As consultas ficam em cache por 15 minutos; o botão **Atualizar dados agora** invalida o cache e cria uma nova fotografia comum a todas as páginas.
 
 ## Regras aplicadas
 
