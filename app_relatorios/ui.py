@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+from base64 import b64encode
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
 import streamlit as st
@@ -60,12 +62,13 @@ def mostrar_atualizacao(instante: datetime) -> None:
 
 def mostrar_cabecalho(titulo: str, descricao: str, instante: datetime) -> None:
     """Mostra o cabeçalho institucional das páginas autenticadas."""
+    logo = _logo_data_uri()
     st.markdown(
         f"""
         <section class="app-header">
             <div class="brand-lockup">
-                <div class="brand-name">Tri<span>vento</span></div>
-                <div class="brand-tagline">Educação</div>
+                <img src="{logo}" alt="Símbolo Trivento Educação" class="brand-logo">
+                <div class="brand-title">Trivento Educação</div>
             </div>
             <div class="header-copy">
                 <h1>{_escapar_html(titulo)}</h1>
@@ -76,6 +79,12 @@ def mostrar_cabecalho(titulo: str, descricao: str, instante: datetime) -> None:
         """,
         unsafe_allow_html=True,
     )
+
+
+def _logo_data_uri() -> str:
+    caminho = Path(__file__).parent / "assets" / "logo-transparent.png"
+    conteudo = caminho.read_bytes()
+    return "data:image/png;base64," + b64encode(conteudo).decode("ascii")
 
 
 def _escapar_html(valor: str) -> str:

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" role="img" aria-labelledby="title desc">
+  <title id="title">Símbolo Trivento Educação</title>
+  <desc id="desc">Símbolo azul da Trivento Educação</desc>
+  <g fill="none" stroke="#09afe3" stroke-linecap="round" stroke-linejoin="round" stroke-width="9">
+    <path d="M108 67h148L183 172 137 108h76"/>
+    <path d="M73 108h148L148 214 102 149h76"/>
+    <path d="M25 149h148L99 255 53 191h76"/>
+  </g>
+</svg>

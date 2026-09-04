@@ -79,15 +79,14 @@ def aplicar_estilos() -> None:
             border-radius: 50%;
         }
         .brand-lockup, .header-copy, .updated-at { position: relative; z-index: 1; }
-        .brand-name { font-size: 1.35rem; font-weight: 760; letter-spacing: -.02em; line-height: 1; }
-        .brand-name span { color: #9fd0ff; }
-        .brand-tagline {
-            margin-top: .34rem;
-            color: rgba(255,255,255,.72);
-            font-size: .58rem;
+        .brand-lockup { display: flex; flex-direction: column; align-items: flex-start; gap: .35rem; }
+        .brand-logo { display: block; width: 112px; height: auto; }
+        .brand-title {
+            color: white;
+            font-size: 1.05rem;
             font-weight: 700;
-            letter-spacing: .22em;
-            text-transform: uppercase;
+            line-height: 1.1;
+            white-space: nowrap;
         }
         .header-copy { text-align: center; }
         .header-copy h1 {
@@ -199,6 +198,8 @@ def aplicar_estilos() -> None:
         @media (max-width: 800px) {
             .block-container { padding-top: .75rem; }
             .app-header { grid-template-columns: 1fr; gap: .8rem; padding: 1.15rem; }
+            .brand-logo { width: 100px; }
+            .brand-title { font-size: 1rem; }
             .header-copy { text-align: left; }
             .header-copy p { margin-left: 0; }
             .updated-at { justify-self: start; }
