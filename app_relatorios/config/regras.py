@@ -83,7 +83,7 @@ PROPRIETARIO_PARA_CONSULTOR = {
     "Maria Fernanda Luiz Monteiro": "Maria Fernanda",
     "Ana Carolina Guimarães": "Ana Carolina",
     "Lorena Viana Gonçalves Pereira": "Lorena",
-    "Thalia Gabriela de Araújo Silva": "Thalia",
+    "Thalia Costa": "Thalia",
     "Camila Guimarães Santos": "Camila",
     "Breno Assis Ferreira": "Breno",
     "Alana Mileyde de Souza Pinto":"Alana",
