@@ -7,8 +7,23 @@ df = pd.read_csv('dataset.csv')
 
 
 leads = df['ID Lead'].drop_duplicates().tolist()
+ARQUIVO_INSCRICOES_PROCESSADAS = 'inscricoes_processadas.txt'
+ARQUIVO_LEADS_PROCESSADOS = 'leads_processados.txt'
+
+def carregar_processados(arquivo):
+    try:
+        with open(arquivo, 'r') as file:
+            return set(file.read().splitlines())
+    except FileNotFoundError:
+        return set()
+
+def registrar_processado(arquivo, valor):
+    with open(arquivo, 'a') as file:
+        file.write(f'{valor}\n')
 
 def run(playwright: Playwright) -> None:
+    inscricoes_processadas = carregar_processados(ARQUIVO_INSCRICOES_PROCESSADAS)
+    leads_processados = carregar_processados(ARQUIVO_LEADS_PROCESSADOS)
     browser = playwright.chromium.launch(headless=False)
     context = browser.new_context()
     page = context.new_page()
@@ -16,22 +31,27 @@ def run(playwright: Playwright) -> None:
     # login
     page.goto("https://wakeme.crmeducacional.com/login/index.html?returnUrl=%2Fapp%2Fleads%2Findex.html")
     page.get_by_role("textbox", name="E-mail").fill("arthurmadeira@triventoeducacao.com.br")
-    page.get_by_role("textbox", name="Senha").fill("123455678")
+    page.get_by_role("textbox", name="Senha").fill("12345678")
     page.get_by_role("button", name="Entrar").click()
 
     sleep(30)  # aguarda 5 segundos para garantir que a página carregue completamente
 
+   
 
     # iterar sobre as leads e excluir inscrições
     for lead in leads:
+        if str(lead) in leads_processados:
+            continue
         inscricoes = df.loc[df['ID Lead'] == lead, 'id_inscricao'].values
         for inscricao in inscricoes:
             if pd.isna(inscricao):
                 continue  # pular se a inscrição for NaN
+            if str(inscricao) in inscricoes_processadas:
+                continue
             try:
                 link = page.goto(f"https://wakeme.crmeducacional.com/app/inscriptions/?open={inscricao}")
                 sleep(3)  # aguarda 5 segundos para garantir que a página carregue completamente
-                # link = f"https://wakeme.crmeducacional.com/app/inscriptions/?legacyUrl=%2FInscricao%2FEditar%{inscricao}"
+                
                 page.goto(link)
                 
 
@@ -121,8 +141,10 @@ def run(playwright: Playwright) -> None:
                 botao_confirmar_exclusao = page.get_by_role("button", name="Excluir")
                 if botao_confirmar_exclusao.is_visible():
                     botao_confirmar_exclusao.click()
+                    registrar_processado(ARQUIVO_INSCRICOES_PROCESSADAS, inscricao)
+                    inscricoes_processadas.add(str(inscricao))
     
-    
+
     
     # excluir lead
         try:
@@ -132,6 +154,7 @@ def run(playwright: Playwright) -> None:
             continue
 
         page.get_by_label("Confirmar exclusão").get_by_role("button", name="Excluir").click()
+        registrar_processado(ARQUIVO_LEADS_PROCESSADOS, lead)
     
 
     # ---------------------
