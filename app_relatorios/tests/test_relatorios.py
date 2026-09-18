@@ -107,6 +107,32 @@ def test_reconciliacao_considera_desistente_como_matriculado():
     assert "CAN-005" in set(rel.matriculas_crm["Numero Inscricao"])
 
 
+def test_reconciliacao_prioriza_matriculado_quando_lead_tambem_tem_desistente():
+    leads, inscricoes, planilha = _fontes()
+    inscricoes = pd.concat(
+        [
+            inscricoes,
+            pd.DataFrame(
+                [
+                    {
+                        "Numero Inscricao": "CAN-DESISTENTE",
+                        "ID Lead Inscrição": "L2",
+                        "Situação Inscrição": "Desistente",
+                        "Curso ID": "Direito",
+                    }
+                ]
+            ),
+        ],
+        ignore_index=True,
+    )
+
+    rel = gerar_relatorios(leads, inscricoes, planilha, MAPA, {"Bruno"})
+
+    inscricoes_crm = set(rel.matriculas_crm["Numero Inscricao"])
+    assert "CAN-002 " in inscricoes_crm
+    assert "CAN-DESISTENTE" not in inscricoes_crm
+
+
 def test_reconciliacao_medicina_usa_numero_de_inscricao():
     leads, inscricoes, planilha = _fontes()
     inscricoes.loc[

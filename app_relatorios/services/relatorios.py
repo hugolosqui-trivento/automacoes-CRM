@@ -92,6 +92,20 @@ def _texto_preenchido(serie: pd.Series) -> pd.Series:
     return serie.notna() & serie.astype("string").str.strip().ne("")
 
 
+def _filtrar_inscricoes_matriculadas(inscricoes: pd.DataFrame) -> pd.DataFrame:
+    """Mantém desistentes apenas quando o lead não possui matrícula ativa."""
+    situacao = inscricoes.get(
+        "Situação Inscrição", pd.Series(index=inscricoes.index, dtype="object")
+    ).map(_normalizar_texto)
+    leads_matriculados = inscricoes.loc[
+        situacao.eq("matriculado"), LEAD_KEY
+    ].dropna()
+    manter = situacao.isin({"matriculado", "desistente"}) & ~(
+        situacao.eq("desistente") & inscricoes[LEAD_KEY].isin(leads_matriculados)
+    )
+    return inscricoes.loc[manter].copy()
+
+
 def _padronizar_unidade(valor):
     texto = _normalizar_texto(valor)
     for identificador, unidade in UNIDADES_PADRAO.items():
@@ -187,11 +201,12 @@ def gerar_relatorios(
     inscricoes = inscricoes.loc[~forma_ingresso_ignorada].copy()
     planilha = _com_chave(planilha, "Número de Inscrição")
 
-    situacao = inscricoes.get("Situação Inscrição", pd.Series(index=inscricoes.index, dtype="object"))
-    curso = inscricoes.get("Curso ID", pd.Series(index=inscricoes.index, dtype="object"))
-    matriculado = situacao.map(_normalizar_texto).isin({"matriculado", "desistente"})
+    inscricoes_matriculadas = _filtrar_inscricoes_matriculadas(inscricoes)
+    curso = inscricoes_matriculadas.get(
+        "Curso ID", pd.Series(index=inscricoes_matriculadas.index, dtype="object")
+    )
     nao_medicina = ~curso.map(_normalizar_texto).eq("medicina")
-    crm_bruto = inscricoes.loc[matriculado & nao_medicina].copy()
+    crm_bruto = inscricoes_matriculadas.loc[nao_medicina].copy()
     planilha_bruta = planilha.dropna(subset=[INSCRICAO_KEY]).copy()
 
     duplicidades_crm = crm_bruto[crm_bruto.duplicated(INSCRICAO_KEY, keep=False)].copy()
