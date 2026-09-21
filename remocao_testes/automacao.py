@@ -232,7 +232,7 @@ def run(playwright: Playwright, validar=False) -> None:
                     total += processar_relacionados(page, inscricao, validar)
                     if validar:
                         continue
-                    input(f"Relacionamentos removidos. Pressione Enter para excluir a inscrição {inscricao}...")
+                    
                     excluir_registro(page, "inscricoes", inscricao)
                     registrar_processado(ARQUIVO_INSCRICOES_PROCESSADAS, inscricao)
                     inscricoes_processadas.add(inscricao)
