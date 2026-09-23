@@ -73,6 +73,7 @@ def create_fetch_xml(attributes):
     <attribute name="cad_minimocaracteres" />
     <attribute name="cad_minimocaracterespreenchidos" />
     <attribute name="cad_nota" />
+    <attribute name="cad_situacao" />
     <attribute name="cad_observacoes" />
     <attribute name="cad_temasredacao_redacao" />
     <attribute name="cad_textoredacao" />
