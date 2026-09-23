@@ -15,7 +15,9 @@ Copy-Item .streamlit\secrets.toml.example .streamlit\secrets.toml
 
 Preencha `.streamlit/secrets.toml` com as credenciais, `MATRICULAS_URL` para a
 planilha operacional e `MATRICULAS_MEDICINA_URL` para a planilha exclusiva de
-Medicina. Esse arquivo está ignorado pelo Git.
+Medicina. Para a correção das redações, informe também `OPENROUTER_KEY`; o
+`OPENROUTER_MODEL` é opcional e usa `openai/gpt-4o-mini` por padrão. Esse arquivo
+está ignorado pelo Git.
 
 ## Execução e testes
 
@@ -46,6 +48,8 @@ O navegador abrirá a página de leads sem proprietário. As consultas ficam em 
 - Inscrição sem lead e lead sem proprietário são ocorrências diferentes.
 - Consultores ignorados não entram em casos acionáveis nem em divergências.
 - Proprietários sem mapeamento são exibidos, nunca descartados silenciosamente.
+- A página **Corrigir redações** consulta somente redações entregues, aplica a
+  correção por IA e disponibiliza o resultado final em Excel.
 
 Os mapeamentos e listas de exclusão ficam em `config/regras.py`.
 

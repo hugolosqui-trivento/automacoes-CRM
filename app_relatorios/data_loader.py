@@ -5,6 +5,7 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
+import pandas as pd
 import streamlit as st
 
 from config.regras import (
@@ -17,8 +18,9 @@ from config.regras import (
     PLANILHA_MEDICINA_ABAS,
     PROPRIETARIO_PARA_CONSULTOR,
 )
-from services.crm_api import CrmClient
+from services.crm_api import CrmClient, CrmSettings
 from services.planilha_matriculas import carregar_planilha, carregar_planilha_medicina
+from services.redacoes import buscar_redacoes_entregues
 from services.relatorios import Relatorios, gerar_relatorios
 from settings import AppSettings
 
@@ -74,4 +76,10 @@ def carregar_dados(settings: AppSettings) -> tuple[Relatorios, datetime]:
 def carregar_dados_medicina(url: str):
     """Carrega separadamente a fonte de matrículas de Medicina."""
     return carregar_planilha_medicina(url, PLANILHA_MEDICINA_ABAS)
+
+
+@st.cache_data(ttl=900, max_entries=10, show_spinner=False)
+def carregar_redacoes(settings: CrmSettings) -> tuple[pd.DataFrame, datetime]:
+    """Busca as redações entregues e registra o instante da consulta."""
+    return buscar_redacoes_entregues(settings), datetime.now().astimezone()
 

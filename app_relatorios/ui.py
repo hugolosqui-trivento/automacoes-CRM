@@ -10,25 +10,31 @@ import pandas as pd
 import streamlit as st
 
 from auth import exigir_autenticacao
-from data_loader import carregar_dados, carregar_dados_medicina
+from data_loader import carregar_dados, carregar_dados_medicina, carregar_redacoes
 from services.relatorios import Relatorios, para_exibicao
 from settings import AppSettings, carregar_settings, validar_settings
 from styles import aplicar_estilos
 
 
 def iniciar_pagina(titulo: str, icone: str = "📊") -> tuple[Relatorios, datetime]:
-    st.set_page_config(page_title=titulo, page_icon=icone, layout="wide")
-    aplicar_estilos()
-    settings = carregar_settings()
-    exigir_autenticacao(settings.app_password)
-    _validar_configuracao(settings)
-    _barra_lateral()
+    settings, _ = preparar_pagina(titulo, icone)
     try:
         return carregar_dados(settings)
     except Exception as exc:  # Streamlit deve apresentar erro operacional sem traceback público.
         st.error(f"Falha ao atualizar os relatórios: {exc}")
         st.info("Confira os secrets, a conectividade e os nomes das abas da planilha.")
         st.stop()
+
+
+def preparar_pagina(titulo: str, icone: str = "📊") -> tuple[AppSettings, datetime]:
+    """Configura uma página autenticada sem carregar os relatórios gerais."""
+    st.set_page_config(page_title=titulo, page_icon=icone, layout="wide")
+    aplicar_estilos()
+    settings = carregar_settings()
+    exigir_autenticacao(settings.app_password)
+    _validar_configuracao(settings)
+    _barra_lateral()
+    return settings, datetime.now().astimezone()
 
 
 def _validar_configuracao(settings: AppSettings) -> None:
@@ -45,12 +51,13 @@ def _barra_lateral() -> None:
     st.sidebar.caption("INTELIGÊNCIA COMERCIAL")
     st.sidebar.markdown("---")
     st.sidebar.caption("CENTRAL DE RELATÓRIOS")
-    if st.sidebar.button("Atualizar dados agora", use_container_width=True):
+    if st.sidebar.button("Atualizar dados agora", width="stretch"):
         carregar_dados.clear()
         carregar_dados_medicina.clear()
+        carregar_redacoes.clear()
         st.rerun()
     if st.session_state.get("autenticado") and st.sidebar.button(
-        "Sair", use_container_width=True
+        "Sair", width="stretch"
     ):
         st.session_state.pop("autenticado", None)
         st.rerun()
@@ -139,7 +146,7 @@ def mostrar_tabela(df: pd.DataFrame, prefixo: str) -> None:
     filtrado = filtrar_dataframe(df, prefixo)
     visivel = para_exibicao(filtrado)
     st.caption(f"{len(visivel):,} registro(s) exibido(s)".replace(",", "."))
-    st.dataframe(visivel, use_container_width=True, hide_index=True)
+    st.dataframe(visivel, width="stretch", hide_index=True)
 
 
 def filtrar_por_unidade_lead(

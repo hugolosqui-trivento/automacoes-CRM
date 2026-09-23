@@ -27,6 +27,8 @@ class AppSettings:
     app_env: str
     app_password: str
     matriculas_medicina_url: str = ""
+    openrouter_key: str = ""
+    openrouter_model: str = "openai/gpt-4o-mini"
 
 
 def carregar_settings() -> AppSettings:
@@ -41,6 +43,8 @@ def carregar_settings() -> AppSettings:
         app_env=_valor("APP_ENV", "development").casefold(),
         app_password=_valor("APP_PASSWORD"),
         matriculas_medicina_url=_valor("MATRICULAS_MEDICINA_URL"),
+        openrouter_key=_valor("OPENROUTER_KEY") or _valor("OPENROUTER_API"),
+        openrouter_model=_valor("OPENROUTER_MODEL", "openai/gpt-4o-mini"),
     )
 
 
