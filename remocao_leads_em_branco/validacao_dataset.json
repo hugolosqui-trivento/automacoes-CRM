@@ -1,0 +1,491 @@
+{
+  "data": "2026-09-16",
+  "base": "dataset.csv",
+  "leads": 7,
+  "inscricoes": 4,
+  "leads_sem_inscricao": 3,
+  "linha_ignorada": "#",
+  "escopo": "Seleção e abertura do diálogo Remover, com cancelamento e restauração dos checkboxes; nenhuma remoção confirmada.",
+  "total_marcados": 34,
+  "resultados": [
+    {
+      "url": "https://wakeme.crmeducacional.com/app/inscriptions/edit/42ed2fc2-00b2-f111-aaac-000d3ac0f764",
+      "titulo": "wakeme - Inscrição / CAN-006895-TRI",
+      "secoes": [
+        {
+          "secao": "leads",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 1,
+              "marcadas": 1,
+              "selecao_interna": 1,
+              "confirmacao": true,
+              "ids_correspondem": true,
+              "selecao_apos_restaurar": 0,
+              "tem_proxima": false
+            }
+          ],
+          "status": "validada"
+        },
+        {
+          "secao": "pagamentos",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "redacoes",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "provas",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "avaliacoes",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 7,
+              "marcadas": 7,
+              "selecao_interna": 7,
+              "confirmacao": true,
+              "ids_correspondem": true,
+              "selecao_apos_restaurar": 0,
+              "tem_proxima": false
+            }
+          ],
+          "status": "validada"
+        },
+        {
+          "secao": "classificacoes",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "precos",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "termos",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        }
+      ]
+    },
+    {
+      "url": "https://wakeme.crmeducacional.com/app/inscriptions/edit/00eb8dc3-fcb1-f111-aaab-002248e10b2d",
+      "titulo": "wakeme - Inscrição / CAN-006894-TRI",
+      "secoes": [
+        {
+          "secao": "leads",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 1,
+              "marcadas": 1,
+              "selecao_interna": 1,
+              "confirmacao": true,
+              "ids_correspondem": true,
+              "selecao_apos_restaurar": 0,
+              "tem_proxima": false
+            }
+          ],
+          "status": "validada"
+        },
+        {
+          "secao": "pagamentos",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "redacoes",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "provas",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "avaliacoes",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 3,
+              "marcadas": 3,
+              "selecao_interna": 3,
+              "confirmacao": true,
+              "ids_correspondem": true,
+              "selecao_apos_restaurar": 0,
+              "tem_proxima": false
+            }
+          ],
+          "status": "validada"
+        },
+        {
+          "secao": "classificacoes",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "precos",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "termos",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        }
+      ]
+    },
+    {
+      "url": "https://wakeme.crmeducacional.com/app/inscriptions/edit/ad0feb6a-87ac-f111-aaab-7ced8db11fb7",
+      "titulo": "wakeme - Inscrição / CAN-006620-TRI",
+      "secoes": [
+        {
+          "secao": "leads",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 1,
+              "marcadas": 1,
+              "selecao_interna": 1,
+              "confirmacao": true,
+              "ids_correspondem": true,
+              "selecao_apos_restaurar": 0,
+              "tem_proxima": false
+            }
+          ],
+          "status": "validada"
+        },
+        {
+          "secao": "pagamentos",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 8,
+              "marcadas": 8,
+              "selecao_interna": 8,
+              "confirmacao": true,
+              "ids_correspondem": true,
+              "selecao_apos_restaurar": 0,
+              "tem_proxima": false
+            }
+          ],
+          "status": "validada"
+        },
+        {
+          "secao": "redacoes",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "provas",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "avaliacoes",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 3,
+              "marcadas": 3,
+              "selecao_interna": 3,
+              "confirmacao": true,
+              "ids_correspondem": true,
+              "selecao_apos_restaurar": 0,
+              "tem_proxima": false
+            }
+          ],
+          "status": "validada"
+        },
+        {
+          "secao": "classificacoes",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "precos",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 1,
+              "marcadas": 1,
+              "selecao_interna": 1,
+              "confirmacao": true,
+              "ids_correspondem": true,
+              "selecao_apos_restaurar": 0,
+              "tem_proxima": false
+            }
+          ],
+          "status": "validada"
+        },
+        {
+          "secao": "termos",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        }
+      ]
+    },
+    {
+      "url": "https://wakeme.crmeducacional.com/app/inscriptions/edit/efc50c21-caab-f111-aaab-7ced8db11fb7",
+      "titulo": "wakeme - Inscrição / CAN-006577-TRI",
+      "secoes": [
+        {
+          "secao": "leads",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 1,
+              "marcadas": 1,
+              "selecao_interna": 1,
+              "confirmacao": true,
+              "ids_correspondem": true,
+              "selecao_apos_restaurar": 0,
+              "tem_proxima": false
+            }
+          ],
+          "status": "validada"
+        },
+        {
+          "secao": "pagamentos",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 1,
+              "marcadas": 1,
+              "selecao_interna": 1,
+              "confirmacao": true,
+              "ids_correspondem": true,
+              "selecao_apos_restaurar": 0,
+              "tem_proxima": false
+            }
+          ],
+          "status": "validada"
+        },
+        {
+          "secao": "redacoes",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "provas",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 1,
+              "marcadas": 1,
+              "selecao_interna": 1,
+              "confirmacao": true,
+              "ids_correspondem": true,
+              "selecao_apos_restaurar": 0,
+              "tem_proxima": false
+            }
+          ],
+          "status": "validada"
+        },
+        {
+          "secao": "avaliacoes",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 5,
+              "marcadas": 5,
+              "selecao_interna": 5,
+              "confirmacao": true,
+              "ids_correspondem": true,
+              "selecao_apos_restaurar": 0,
+              "tem_proxima": false
+            }
+          ],
+          "status": "validada"
+        },
+        {
+          "secao": "classificacoes",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 1,
+              "marcadas": 1,
+              "selecao_interna": 1,
+              "confirmacao": true,
+              "ids_correspondem": true,
+              "selecao_apos_restaurar": 0,
+              "tem_proxima": false
+            }
+          ],
+          "status": "validada"
+        },
+        {
+          "secao": "precos",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        },
+        {
+          "secao": "termos",
+          "paginas": [
+            {
+              "pagina": 1,
+              "linhas": 0,
+              "marcadas": 0,
+              "selecao_interna": 0,
+              "confirmacao": false
+            }
+          ],
+          "status": "vazia"
+        }
+      ]
+    }
+  ]
+}

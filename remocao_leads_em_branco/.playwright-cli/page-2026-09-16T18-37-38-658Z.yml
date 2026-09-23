@@ -1,0 +1,110 @@
+- generic [active] [ref=f13e1]:
+  - navigation [ref=f13e2]:
+    - generic [ref=f13e3]:
+      - generic: 
+      - img "WakeMe Pro" [ref=f13e4]
+      - heading "wakeme pro" [level=3] [ref=f13e5]
+    - generic [ref=f13e6]:
+      - generic [ref=f13e7]:
+        - searchbox "Encontre no menu" [ref=f13e8]
+        - generic [ref=f13e9]: search
+      - list [ref=f13e10]:
+        - separator [ref=f13e11]
+        - listitem [ref=f13e12]:
+          - link "grid_view Overview" [ref=f13e13] [cursor=pointer]:
+            - /url: /app/index.html
+            - generic [ref=f13e14]: grid_view
+            - generic [ref=f13e16]: Overview
+        - listitem [ref=f13e17]:
+          - link "dashboard_2 Indicadores" [ref=f13e18] [cursor=pointer]:
+            - /url: /app/indicadores/index.html
+            - generic [ref=f13e19]: dashboard_2
+            - generic [ref=f13e21]: Indicadores
+        - listitem [ref=f13e22]:
+          - link "forum Conversas" [ref=f13e23] [cursor=pointer]:
+            - /url: /Conversas/GerarToken
+            - generic [ref=f13e24]: forum
+            - generic [ref=f13e26]: Conversas
+        - listitem [ref=f13e27]:
+          - link "group Candidatos" [ref=f13e28] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f13e29]: group
+            - generic [ref=f13e31]: Candidatos
+        - listitem [ref=f13e32]:
+          - link "call Atividades" [ref=f13e33] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f13e34]: call
+            - generic [ref=f13e36]: Atividades
+        - listitem [ref=f13e37]:
+          - link "campaign Marketing" [ref=f13e38] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f13e39]: campaign
+            - generic [ref=f13e41]: Marketing
+        - listitem [ref=f13e42]:
+          - link "school Processo Seletivo" [ref=f13e43] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f13e44]: school
+            - generic [ref=f13e46]: Processo Seletivo
+        - listitem [ref=f13e47]:
+          - link "find_in_page Apuração de Resultados" [ref=f13e48] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f13e49]: find_in_page
+            - generic [ref=f13e51]: Apuração de Resultados
+        - listitem [ref=f13e52]:
+          - link "dashboard Configurações Comerciais" [ref=f13e53] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f13e54]: dashboard
+            - generic [ref=f13e56]: Configurações Comerciais
+        - listitem [ref=f13e57]:
+          - link "receipt_long Serviço de Pagamento" [ref=f13e58] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f13e59]: receipt_long
+            - generic [ref=f13e61]: Serviço de Pagamento
+        - listitem [ref=f13e62]:
+          - link "summarize Relatórios" [ref=f13e63] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f13e64]: summarize
+            - generic [ref=f13e66]: Relatórios
+        - listitem [ref=f13e67]:
+          - link "share Integrações" [ref=f13e68] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f13e69]: share
+            - generic [ref=f13e71]: Integrações
+        - listitem [ref=f13e72]:
+          - link "settings Administração" [ref=f13e73] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f13e74]: settings
+            - generic [ref=f13e76]: Administração
+  - main [ref=f13e77]:
+    - generic [ref=f13e78]:
+      - generic [ref=f13e80]:
+        - combobox "Pesquisa global" [disabled] [ref=f13e81]:
+          - option "Pesquisa global" [selected]
+        - button "Perguntas Frequentes" [ref=f13e83] [cursor=pointer]
+      - generic [ref=f13e86]:
+        - generic [ref=f13e87]:
+          - paragraph [ref=f13e88]:
+            - generic [aria-hidden] [ref=f13e89]: view_list
+            - generic [ref=f13e90]: Listagem
+          - generic [ref=f13e91]:
+            - button "Visualização Kanban" [ref=f13e92] [cursor=pointer]:
+              - generic [ref=f13e93]: view_kanban
+            - button "Visualização Grid" [ref=f13e94] [cursor=pointer]:
+              - generic [ref=f13e95]: format_list_bulleted
+          - button "Adicionar" [ref=f13e96] [cursor=pointer]
+          - button "Todos expand_more" [ref=f13e98] [cursor=pointer]:
+            - generic [ref=f13e99]: Todos
+            - generic [ref=f13e100]: expand_more
+        - generic [ref=f13e101]:
+          - button "Editar Colunas view_column" [ref=f13e104] [cursor=pointer]:
+            - generic [ref=f13e105]:
+              - text: Editar Colunas
+              - generic [ref=f13e106]: view_column
+          - button "Editar Filtros search" [ref=f13e107] [cursor=pointer]:
+            - generic [ref=f13e108]:
+              - text: Editar Filtros
+              - generic [ref=f13e109]: search
+          - button "more_vert" [ref=f13e111] [cursor=pointer]
+      - generic [ref=f13e117]:
+        - generic [ref=f13e118]: search
+        - searchbox "Filtrar por palavra-chave" [ref=f13e119]

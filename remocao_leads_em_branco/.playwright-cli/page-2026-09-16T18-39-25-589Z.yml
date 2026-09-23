@@ -1,0 +1,281 @@
+- generic [active] [ref=f16e1]:
+  - navigation [ref=f16e2]:
+    - generic [ref=f16e3]:
+      - generic: 
+      - img "WakeMe Pro" [ref=f16e4]
+      - heading "wakeme pro" [level=3] [ref=f16e5]
+    - generic [ref=f16e6]:
+      - generic [ref=f16e7]:
+        - searchbox "Encontre no menu" [ref=f16e8]
+        - generic [ref=f16e9]: search
+      - list [ref=f16e10]:
+        - separator [ref=f16e11]
+        - listitem [ref=f16e12]:
+          - link "grid_view Overview" [ref=f16e13] [cursor=pointer]:
+            - /url: /app/index.html
+            - generic [ref=f16e14]: grid_view
+            - generic [ref=f16e16]: Overview
+        - listitem [ref=f16e17]:
+          - link "dashboard_2 Indicadores" [ref=f16e18] [cursor=pointer]:
+            - /url: /app/indicadores/index.html
+            - generic [ref=f16e19]: dashboard_2
+            - generic [ref=f16e21]: Indicadores
+        - listitem [ref=f16e22]:
+          - link "forum Conversas" [ref=f16e23] [cursor=pointer]:
+            - /url: /Conversas/GerarToken
+            - generic [ref=f16e24]: forum
+            - generic [ref=f16e26]: Conversas
+        - listitem [ref=f16e27]:
+          - link "group Candidatos" [ref=f16e28] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e29]: group
+            - generic [ref=f16e31]: Candidatos
+        - listitem [ref=f16e32]:
+          - link "call Atividades" [ref=f16e33] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e34]: call
+            - generic [ref=f16e36]: Atividades
+        - listitem [ref=f16e37]:
+          - link "campaign Marketing" [ref=f16e38] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e39]: campaign
+            - generic [ref=f16e41]: Marketing
+        - listitem [ref=f16e42]:
+          - link "school Processo Seletivo" [ref=f16e43] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e44]: school
+            - generic [ref=f16e46]: Processo Seletivo
+        - listitem [ref=f16e47]:
+          - link "find_in_page Apuração de Resultados" [ref=f16e48] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e49]: find_in_page
+            - generic [ref=f16e51]: Apuração de Resultados
+        - listitem [ref=f16e52]:
+          - link "dashboard Configurações Comerciais" [ref=f16e53] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e54]: dashboard
+            - generic [ref=f16e56]: Configurações Comerciais
+        - listitem [ref=f16e57]:
+          - link "receipt_long Serviço de Pagamento" [ref=f16e58] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e59]: receipt_long
+            - generic [ref=f16e61]: Serviço de Pagamento
+        - listitem [ref=f16e62]:
+          - link "summarize Relatórios" [ref=f16e63] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e64]: summarize
+            - generic [ref=f16e66]: Relatórios
+        - listitem [ref=f16e67]:
+          - link "share Integrações" [ref=f16e68] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e69]: share
+            - generic [ref=f16e71]: Integrações
+        - listitem [ref=f16e72]:
+          - link "settings Administração" [ref=f16e73] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e74]: settings
+            - generic [ref=f16e76]: Administração
+  - main [ref=f16e77]:
+    - generic [ref=f16e78]:
+      - generic [ref=f16e80]:
+        - searchbox "Pesquisa global Dataverse" [ref=f16e82]
+        - generic [ref=f16e83]:
+          - button "Localização Avançada" [ref=f16e84] [cursor=pointer]:
+            - img "Localização Avançada" [ref=f16e85]
+          - button "Perguntas Frequentes" [ref=f16e86] [cursor=pointer]
+          - button "Perfil" [ref=f16e89] [cursor=pointer]:
+            - img "Arthur Menezes" [ref=f16e91]
+      - generic [ref=f16e92]:
+        - generic [ref=f16e93]:
+          - paragraph [ref=f16e95]:
+            - button "Voltar" [ref=f16e96] [cursor=pointer]:
+              - generic [ref=f16e97]: arrow_back_ios
+            - generic [ref=f16e98]: edit
+            - generic [ref=f16e99]: Inscrições
+            - generic [ref=f16e100]: / Novo
+          - generic [ref=f16e102]:
+            - button "Salvar" [ref=f16e103] [cursor=pointer]
+            - button "Excluir" [ref=f16e104] [cursor=pointer]
+            - button "more_vert" [ref=f16e107] [cursor=pointer]
+            - button "Fluxos" [ref=f16e110] [cursor=pointer]
+        - list [ref=f16e112]:
+          - listitem [ref=f16e113]:
+            - heading "Inscrito" [level=4] [ref=f16e114]
+          - listitem [ref=f16e115]:
+            - heading "Classificado" [level=4] [ref=f16e116]
+          - listitem [ref=f16e117]:
+            - heading "Convocado" [level=4] [ref=f16e118]
+          - listitem [ref=f16e119]:
+            - heading "Matriculado" [level=4] [ref=f16e120]
+        - generic [ref=f16e122]:
+          - generic [ref=f16e123]:
+            - button "Informações da Inscrição" [ref=f16e124] [cursor=pointer]
+            - button "Financeiro" [ref=f16e125] [cursor=pointer]
+            - button "Contrato Online" [ref=f16e126] [cursor=pointer]: Contrato On-line
+            - button "Atividades" [ref=f16e127] [cursor=pointer]
+            - button "Prova Online" [ref=f16e128] [cursor=pointer]: Prova On-line
+            - button "Informações de Matrícula" [ref=f16e129] [cursor=pointer]
+            - button "Relacionados" [ref=f16e350] [cursor=pointer]
+          - button "Mais abas" [ref=f16e132] [cursor=pointer]: …
+      - form [ref=f16e134]:
+        - generic [ref=f16e352]:
+          - article [ref=f16e353]:
+            - generic [ref=f16e354]:
+              - button "Leads" [expanded] [ref=f16e355] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f16e356]: groups
+                - generic [aria-hidden] [ref=f16e358]: expand_less
+              - generic "Ações" [ref=f16e359]:
+                - button "Criar Registro" [ref=f16e360] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e361]: post_add
+                - button "Vincular Registro" [ref=f16e362] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e363]: add_box
+                - button "Remover" [ref=f16e364] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e365]: delete
+                - button "Buscar" [ref=f16e366] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e367]: search
+                - button "Recarregar" [ref=f16e368] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e369]: refresh
+          - article [ref=f16e371]:
+            - generic [ref=f16e372]:
+              - button "Pagamentos" [ref=f16e373] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f16e374]: payments
+                - generic [aria-hidden] [ref=f16e376]: expand_more
+              - generic "Ações" [ref=f16e377]:
+                - button "Vincular Registro" [ref=f16e378] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e379]: add_box
+                - button "Remover" [ref=f16e380] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e381]: delete
+                - button "Buscar" [ref=f16e382] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e383]: search
+                - button "Recarregar" [ref=f16e384] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e385]: refresh
+          - article [ref=f16e386]:
+            - generic [ref=f16e387]:
+              - button "Redações" [ref=f16e388] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f16e389]: edit_note
+                - generic [aria-hidden] [ref=f16e391]: expand_more
+              - generic "Ações" [ref=f16e392]:
+                - button "Criar Registro" [ref=f16e393] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e394]: post_add
+                - button "Vincular Registro" [ref=f16e395] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e396]: add_box
+                - button "Remover" [ref=f16e397] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e398]: delete
+                - button "Buscar" [ref=f16e399] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e400]: search
+                - button "Recarregar" [ref=f16e401] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e402]: refresh
+          - article [ref=f16e403]:
+            - generic [ref=f16e404]:
+              - button "Provas Objetivas" [ref=f16e405] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f16e406]: quiz
+                - generic [aria-hidden] [ref=f16e408]: expand_more
+              - generic "Ações" [ref=f16e409]:
+                - button "Criar Registro" [ref=f16e410] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e411]: post_add
+                - button "Vincular Registro" [ref=f16e412] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e413]: add_box
+                - button "Remover" [ref=f16e414] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e415]: delete
+                - button "Buscar" [ref=f16e416] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e417]: search
+                - button "Recarregar" [ref=f16e418] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e419]: refresh
+          - article [ref=f16e420]:
+            - generic [ref=f16e421]:
+              - button "Avaliações" [ref=f16e422] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f16e423]: grade
+                - generic [aria-hidden] [ref=f16e425]: expand_more
+              - generic "Ações" [ref=f16e426]:
+                - button "Criar Registro" [ref=f16e427] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e428]: post_add
+                - button "Vincular Registro" [ref=f16e429] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e430]: add_box
+                - button "Remover" [ref=f16e431] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e432]: delete
+                - button "Buscar" [ref=f16e433] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e434]: search
+                - button "Recarregar" [ref=f16e435] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e436]: refresh
+          - article [ref=f16e437]:
+            - generic [ref=f16e438]:
+              - button "Classificações" [ref=f16e439] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f16e440]: leaderboard
+                - generic [aria-hidden] [ref=f16e442]: expand_more
+              - generic "Ações" [ref=f16e443]:
+                - button "Criar Registro" [ref=f16e444] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e445]: post_add
+                - button "Vincular Registro" [ref=f16e446] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e447]: add_box
+                - button "Remover" [ref=f16e448] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e449]: delete
+                - button "Buscar" [ref=f16e450] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e451]: search
+                - button "Recarregar" [ref=f16e452] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e453]: refresh
+          - article [ref=f16e454]:
+            - generic [ref=f16e455]:
+              - button "Preços Específicos" [ref=f16e456] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f16e457]: sell
+                - generic [aria-hidden] [ref=f16e459]: expand_more
+              - generic "Ações" [ref=f16e460]:
+                - button "Vincular Registro" [ref=f16e461] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e462]: add_box
+                - button "Remover" [ref=f16e463] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e464]: delete
+                - button "Buscar" [ref=f16e465] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e466]: search
+                - button "Recarregar" [ref=f16e467] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e468]: refresh
+          - article [ref=f16e469]:
+            - generic [ref=f16e470]:
+              - button "Termos" [ref=f16e471] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f16e472]: description
+                - generic [aria-hidden] [ref=f16e474]: expand_more
+              - generic "Ações" [ref=f16e475]:
+                - button "Vincular Registro" [ref=f16e476] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e477]: add_box
+                - button "Remover" [ref=f16e478] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e479]: delete
+                - button "Buscar" [ref=f16e480] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e481]: search
+                - button "Recarregar" [ref=f16e482] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e483]: refresh
+          - article [ref=f16e484]:
+            - generic [ref=f16e485]:
+              - button "Histórico de Automação" [ref=f16e486] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f16e487]: smart_toy
+                - generic [aria-hidden] [ref=f16e489]: expand_more
+              - generic "Ações" [ref=f16e490]:
+                - button "Buscar" [ref=f16e491] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e492]: search
+                - button "Recarregar" [ref=f16e493] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e494]: refresh
+          - article [ref=f16e495]:
+            - generic [ref=f16e496]:
+              - button "Trabalhos do Sistema" [ref=f16e497] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f16e498]: rebase
+                - generic [aria-hidden] [ref=f16e500]: expand_more
+              - generic "Ações" [ref=f16e501]:
+                - button "Buscar" [ref=f16e502] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e503]: search
+                - button "Recarregar" [ref=f16e504] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e505]: refresh
+          - article [ref=f16e506]:
+            - generic [ref=f16e507]:
+              - button "Histórico de Auditoria" [ref=f16e508] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f16e509]: history
+                - generic [aria-hidden] [ref=f16e511]: expand_more
+              - generic "Ações" [ref=f16e512]:
+                - button "Buscar" [ref=f16e513] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e514]: search
+                - button "Recarregar" [ref=f16e515] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f16e516]: refresh
+  - button "Abrir WhatsApp Markchat" [ref=f16e341] [cursor=pointer]:
+    - generic [aria-hidden] [ref=f16e342]: chevron_left
+  - text: Corpo Descrição
+  - status:
+    - generic [aria-hidden]: info
+    - generic: Aguarde o carregamento da inscrição.
+    - button "Fechar" [ref=f16e343] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f16e344]: close
