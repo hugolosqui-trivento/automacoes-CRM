@@ -1,0 +1,331 @@
+- generic [ref=f16e1]:
+  - navigation [ref=f16e2]:
+    - generic [ref=f16e3]:
+      - generic: 
+      - img "WakeMe Pro" [ref=f16e4]
+      - heading "wakeme pro" [level=3] [ref=f16e5]
+    - generic [ref=f16e6]:
+      - generic [ref=f16e7]:
+        - searchbox "Encontre no menu" [ref=f16e8]
+        - generic [ref=f16e9]: search
+      - list [ref=f16e10]:
+        - separator [ref=f16e11]
+        - listitem [ref=f16e12]:
+          - link "grid_view Overview" [ref=f16e13] [cursor=pointer]:
+            - /url: /app/index.html
+            - generic [ref=f16e14]: grid_view
+            - generic [ref=f16e16]: Overview
+        - listitem [ref=f16e17]:
+          - link "dashboard_2 Indicadores" [ref=f16e18] [cursor=pointer]:
+            - /url: /app/indicadores/index.html
+            - generic [ref=f16e19]: dashboard_2
+            - generic [ref=f16e21]: Indicadores
+        - listitem [ref=f16e22]:
+          - link "forum Conversas" [ref=f16e23] [cursor=pointer]:
+            - /url: /Conversas/GerarToken
+            - generic [ref=f16e24]: forum
+            - generic [ref=f16e26]: Conversas
+        - listitem [ref=f16e27]:
+          - link "group Candidatos" [ref=f16e28] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e29]: group
+            - generic [ref=f16e31]: Candidatos
+        - listitem [ref=f16e32]:
+          - link "call Atividades" [ref=f16e33] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e34]: call
+            - generic [ref=f16e36]: Atividades
+        - listitem [ref=f16e37]:
+          - link "campaign Marketing" [ref=f16e38] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e39]: campaign
+            - generic [ref=f16e41]: Marketing
+        - listitem [ref=f16e42]:
+          - link "school Processo Seletivo" [ref=f16e43] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e44]: school
+            - generic [ref=f16e46]: Processo Seletivo
+        - listitem [ref=f16e47]:
+          - link "find_in_page Apuração de Resultados" [ref=f16e48] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e49]: find_in_page
+            - generic [ref=f16e51]: Apuração de Resultados
+        - listitem [ref=f16e52]:
+          - link "dashboard Configurações Comerciais" [ref=f16e53] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e54]: dashboard
+            - generic [ref=f16e56]: Configurações Comerciais
+        - listitem [ref=f16e57]:
+          - link "receipt_long Serviço de Pagamento" [ref=f16e58] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e59]: receipt_long
+            - generic [ref=f16e61]: Serviço de Pagamento
+        - listitem [ref=f16e62]:
+          - link "summarize Relatórios" [ref=f16e63] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e64]: summarize
+            - generic [ref=f16e66]: Relatórios
+        - listitem [ref=f16e67]:
+          - link "share Integrações" [ref=f16e68] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e69]: share
+            - generic [ref=f16e71]: Integrações
+        - listitem [ref=f16e72]:
+          - link "settings Administração" [ref=f16e73] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f16e74]: settings
+            - generic [ref=f16e76]: Administração
+  - main [ref=f16e77]:
+    - generic [ref=f16e78]:
+      - generic [ref=f16e80]:
+        - searchbox "Pesquisa global Dataverse" [ref=f16e82]
+        - generic [ref=f16e83]:
+          - button "Localização Avançada" [ref=f16e84] [cursor=pointer]:
+            - img "Localização Avançada" [ref=f16e85]
+          - button "Perguntas Frequentes" [ref=f16e86] [cursor=pointer]
+          - button "Perfil" [ref=f16e89] [cursor=pointer]:
+            - img "Arthur Menezes" [ref=f16e91]
+      - generic [ref=f16e92]:
+        - generic [ref=f16e93]:
+          - paragraph [ref=f16e95]:
+            - button "Voltar" [ref=f16e96] [cursor=pointer]:
+              - generic [ref=f16e97]: arrow_back_ios
+            - generic [ref=f16e98]: edit
+            - generic [ref=f16e99]: Inscrições
+            - generic [ref=f16e100]: / Novo
+          - generic [ref=f16e102]:
+            - button "Salvar" [ref=f16e103] [cursor=pointer]
+            - button "Excluir" [ref=f16e104] [cursor=pointer]
+            - button "more_vert" [ref=f16e107] [cursor=pointer]
+            - button "Fluxos" [ref=f16e110] [cursor=pointer]
+        - list [ref=f16e112]:
+          - listitem [ref=f16e113]:
+            - heading "Inscrito" [level=4] [ref=f16e114]
+          - listitem [ref=f16e115]:
+            - heading "Classificado" [level=4] [ref=f16e116]
+          - listitem [ref=f16e117]:
+            - heading "Convocado" [level=4] [ref=f16e118]
+          - listitem [ref=f16e119]:
+            - heading "Matriculado" [level=4] [ref=f16e120]
+        - generic [ref=f16e122]:
+          - generic [ref=f16e123]:
+            - button "Informações da Inscrição" [ref=f16e124] [cursor=pointer]
+            - button "Financeiro" [ref=f16e125] [cursor=pointer]
+            - button "Contrato Online" [ref=f16e126] [cursor=pointer]: Contrato On-line
+            - button "Atividades" [ref=f16e127] [cursor=pointer]
+            - button "Prova Online" [ref=f16e128] [cursor=pointer]: Prova On-line
+            - button "Informações de Matrícula" [ref=f16e129] [cursor=pointer]
+            - button "Marketing" [ref=f16e130] [cursor=pointer]
+          - generic [ref=f16e131]:
+            - button "Mais abas" [expanded] [active] [ref=f16e132] [cursor=pointer]: …
+            - menu [ref=f16e345]:
+              - menuitem "Integração ENEM" [ref=f16e346] [cursor=pointer]
+              - menuitem "Rotas" [ref=f16e347] [cursor=pointer]
+              - menuitem "TRIVENTO" [ref=f16e348] [cursor=pointer]
+              - menuitem "Relacionados" [ref=f16e349] [cursor=pointer]
+      - form [ref=f16e134]:
+        - generic [ref=f16e135]:
+          - generic [ref=f16e136]:
+            - generic [ref=f16e138]:
+              - paragraph [ref=f16e139]: Informações Básicas da Inscrição
+              - generic [ref=f16e140]:
+                - generic [ref=f16e141]:
+                  - generic [ref=f16e142]: Número de Inscrição
+                  - textbox "Número de Inscrição" [disabled] [ref=f16e144]
+                - generic [ref=f16e145]:
+                  - generic [ref=f16e146]: Concurso *
+                  - button "Concurso *" [ref=f16e149] [cursor=pointer]: Selecionar...
+                - generic [ref=f16e150]:
+                  - generic [ref=f16e151]: Linha de Negócios (Concurso)
+                  - textbox "Linha de Negócios (Concurso)" [disabled] [ref=f16e153]
+                - generic [ref=f16e154]:
+                  - generic [ref=f16e155]: Situação no Concurso *
+                  - combobox "Situação no Concurso *" [ref=f16e158]:
+                    - option "Selecionar..." [selected]
+                    - option "Inscrito"
+                    - option "Aprovado"
+                    - option "Classificado"
+                    - option "Desclassificado"
+                    - option "Desistente"
+                    - option "Matriculado"
+                    - option "Ausente"
+                - generic [ref=f16e159]:
+                  - generic [ref=f16e160]: Fase de Captação
+                  - combobox "Fase de Captação" [ref=f16e163]:
+                    - option "Selecionar..." [selected]
+                    - option "Inscrição Não Iniciada"
+                    - option "Inscrição Incompleta"
+                    - option "Inscrição Completa"
+                    - option "Lembrete de Prova"
+                    - option "Lembrete de Pagamento"
+                    - option "Confirmação de Pagamento"
+                    - option "Documentação Pendente"
+                    - option "Convocados"
+                    - option "Ausentes"
+                    - option "Classificados"
+                    - option "Desclassificados"
+                    - option "Pré-Matriculados"
+                    - option "Matriculados"
+                    - option "Desistentes"
+            - generic [ref=f16e165]:
+              - paragraph [ref=f16e166]: Dados do Lead
+              - generic [ref=f16e167]:
+                - generic [ref=f16e168]:
+                  - generic [ref=f16e169]: Lead *
+                  - button "Lead *" [ref=f16e172] [cursor=pointer]: Selecionar...
+                - generic [ref=f16e173]:
+                  - generic [ref=f16e174]: Nome Social
+                  - textbox "Nome Social" [disabled] [ref=f16e176]
+                - generic [ref=f16e177]:
+                  - generic [ref=f16e178]: Situação no Funil
+                  - textbox "Situação no Funil" [disabled] [ref=f16e180]
+                - generic [ref=f16e181]:
+                  - generic [ref=f16e182]: CPF
+                  - textbox "CPF" [disabled] [ref=f16e184]
+                - generic [ref=f16e185]:
+                  - generic [ref=f16e186]: Dados Validados
+                  - textbox "Dados Validados" [disabled] [ref=f16e188]
+                - generic [ref=f16e189]:
+                  - generic [ref=f16e190]: Telefone Celular
+                  - textbox "Telefone Celular" [disabled] [ref=f16e192]
+                - generic [ref=f16e193]:
+                  - generic [ref=f16e194]: E-mail
+                  - textbox "E-mail" [disabled] [ref=f16e196]
+          - generic [ref=f16e197]:
+            - generic [ref=f16e199]:
+              - paragraph [ref=f16e200]: Informações de Oferta
+              - generic [ref=f16e201]:
+                - generic [ref=f16e202]:
+                  - generic [ref=f16e203]: Oferta
+                  - button "Oferta" [disabled] [ref=f16e206]: Escolha um concurso para ver as ofertas
+                - generic [ref=f16e207]:
+                  - generic [ref=f16e208]: 2ª Opção de Oferta
+                  - button "2ª Opção de Oferta" [disabled] [ref=f16e211]: Escolha um concurso para ver as ofertas
+                - generic [ref=f16e212]:
+                  - generic [ref=f16e213]: 3ª Opção de Oferta
+                  - button "3ª Opção de Oferta" [disabled] [ref=f16e216]: Escolha um concurso para ver as ofertas
+            - generic [ref=f16e218]:
+              - paragraph [ref=f16e219]: Jornada de Inscrição
+              - generic [ref=f16e220]:
+                - generic [ref=f16e221]:
+                  - generic [ref=f16e222]: Fase Portal do Candidato
+                  - combobox "Fase Portal do Candidato" [ref=f16e225]:
+                    - option "Selecionar..." [selected]
+                    - option "Curso"
+                    - option "Dados"
+                    - option "Pagamento"
+                    - option "Resumo"
+                    - option "Pagamento Matrícula"
+                    - option "Resumo Matrícula"
+                    - option "Redação On-line"
+                    - option "Prova Objetiva On-line"
+                    - option "Inscrição"
+                    - option "Matrícula"
+                - generic [ref=f16e226]:
+                  - generic [ref=f16e227]: Obrigar Atualização Cadastral
+                  - combobox "Obrigar Atualização Cadastral" [ref=f16e230]:
+                    - option "Selecionar..." [selected]
+                    - option "Não"
+                    - option "Sim"
+                - generic [ref=f16e231]:
+                  - generic [ref=f16e232]: Exibir Etapa Confirmação de Dados
+                  - combobox "Exibir Etapa Confirmação de Dados" [ref=f16e235]:
+                    - option "Selecionar..." [selected]
+                    - option "Não"
+                    - option "Sim"
+                - generic [ref=f16e236]:
+                  - generic [ref=f16e237]: Dados Obrigatórios Coletados
+                  - combobox "Dados Obrigatórios Coletados" [ref=f16e240]:
+                    - option "Selecionar..." [selected]
+                    - option "Não"
+                    - option "Sim"
+                - generic [ref=f16e241]:
+                  - generic [ref=f16e242]: Dados Complementares Coletados
+                  - combobox "Dados Complementares Coletados" [ref=f16e245]:
+                    - option "Selecionar..." [selected]
+                    - option "Não"
+                    - option "Sim"
+          - generic [ref=f16e246]:
+            - generic [ref=f16e248]:
+              - paragraph [ref=f16e249]: Responsável Legal
+              - generic [ref=f16e250]:
+                - generic [ref=f16e251]:
+                  - generic [ref=f16e252]: Responsável
+                  - button "Responsável" [ref=f16e255] [cursor=pointer]: Selecionar...
+                - generic [ref=f16e256]:
+                  - generic [ref=f16e257]: Nome
+                  - textbox "Nome" [ref=f16e259]
+                - generic [ref=f16e260]:
+                  - generic [ref=f16e261]: CPF
+                  - textbox "CPF" [ref=f16e263]
+                - generic [ref=f16e264]:
+                  - generic [ref=f16e265]: E-mail
+                  - textbox "E-mail" [ref=f16e267]
+                - generic [ref=f16e268]:
+                  - generic [ref=f16e269]: Data de Nascimento
+                  - textbox "Data de Nascimento" [ref=f16e271]
+                - generic [ref=f16e272]:
+                  - generic [ref=f16e273]: Aceitou o Termo?
+                  - combobox "Aceitou o Termo?" [ref=f16e276]:
+                    - option "Selecionar..." [selected]
+                    - option "Não"
+                    - option "Sim"
+                - generic [ref=f16e277]:
+                  - generic [ref=f16e278]: Data e Hora do Aceite
+                  - textbox "Data e Hora do Aceite" [ref=f16e280]
+                - generic [ref=f16e281]:
+                  - generic [ref=f16e282]: IP Aceite
+                  - textbox "IP Aceite" [ref=f16e284]
+                - generic [ref=f16e285]:
+                  - generic [ref=f16e286]: Maioridade
+                  - combobox "Maioridade" [ref=f16e289]:
+                    - option "Selecionar..." [selected]
+                    - option "Não"
+                    - option "Sim"
+            - generic [ref=f16e291]:
+              - paragraph [ref=f16e292]: Wakeme Partners
+              - generic [ref=f16e293]:
+                - generic [ref=f16e294]:
+                  - generic [ref=f16e295]: Exibir no Partners *
+                  - combobox "Exibir no Partners *" [ref=f16e298]:
+                    - option "Selecionar..." [selected]
+                    - option "Não"
+                    - option "Sim"
+                - generic [ref=f16e299]:
+                  - generic [ref=f16e300]: Unidade Certificadora
+                  - button "Unidade Certificadora" [ref=f16e303] [cursor=pointer]: Selecionar...
+          - generic [ref=f16e306]:
+            - paragraph [ref=f16e307]: Dados do Enem
+            - generic [ref=f16e308]:
+              - generic [ref=f16e309]:
+                - generic [ref=f16e310]: Ano
+                - textbox "Ano" [ref=f16e312]
+              - generic [ref=f16e313]:
+                - generic [ref=f16e314]: Nota Ciências Humanas
+                - textbox "Nota Ciências Humanas" [ref=f16e316]
+              - generic [ref=f16e317]:
+                - generic [ref=f16e318]: Nota Ciências da Natureza
+                - textbox "Nota Ciências da Natureza" [ref=f16e320]
+              - generic [ref=f16e321]:
+                - generic [ref=f16e322]: Nota Linguagens
+                - textbox "Nota Linguagens" [ref=f16e324]
+              - generic [ref=f16e325]:
+                - generic [ref=f16e326]: Nota Matemática
+                - textbox "Nota Matemática" [ref=f16e328]
+              - generic [ref=f16e329]:
+                - generic [ref=f16e330]: Nota Redação
+                - textbox "Nota Redação" [ref=f16e332]
+              - generic [ref=f16e333]:
+                - generic [ref=f16e334]: Nota Total
+                - textbox "Nota Total" [ref=f16e336]
+              - generic [ref=f16e337]:
+                - generic [ref=f16e338]: Língua Estrangeira
+                - textbox "Língua Estrangeira" [ref=f16e340]
+  - button "Abrir WhatsApp Markchat" [ref=f16e341] [cursor=pointer]:
+    - generic [aria-hidden] [ref=f16e342]: chevron_left
+  - text: Corpo Descrição
+  - status:
+    - generic [aria-hidden]: error
+    - generic: Inscrição não encontrada.
+    - button "Fechar" [ref=f16e343] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f16e344]: close

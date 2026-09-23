@@ -1,0 +1,5 @@
+[     412ms] [INFO] [entity-list-runtime] script carregado (exibiÃ§Ãµes das listagens entity-list) @ https://wakeme.crmeducacional.com/app/entity-list/entity-list-runtime.js?v=20260902consultor1:171
+[     702ms] [WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. @ about:blank:0
+[     767ms] [INFO] [entity-list-runtime] script carregado (exibiÃ§Ãµes das listagens entity-list) @ https://wakeme.crmeducacional.com/app/entity-list/entity-list-runtime.js?v=20260824ofertaedit1:171
+[     971ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://wakeme.crmeducacional.com/api/v1/inscricoes/b9b7e881-ceb1-f111-aaab-002248e10b2d/campos-personalizados:0
+[     973ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://wakeme.crmeducacional.com/api/v1/inscricoes/b9b7e881-ceb1-f111-aaab-002248e10b2d:0

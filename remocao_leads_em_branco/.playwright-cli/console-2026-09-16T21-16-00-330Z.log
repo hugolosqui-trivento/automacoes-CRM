@@ -1,0 +1,5 @@
+[   38080ms] [LOG] [Wakeme Login] início {email: arthurmadeira@triventoeducacao.com.br, returnUrl: null} @ https://wakeme.crmeducacional.com/login/index.html:89
+[   38350ms] [LOG] [Wakeme Login] fim {http: 200, ms: 270, outcome: redirect, response: Object} @ https://wakeme.crmeducacional.com/login/index.html:89
+[   38351ms] [LOG] [Wakeme Login] redirect → /app/ @ https://wakeme.crmeducacional.com/login/index.html:89
+[   39562ms] [WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. @ about:blank:0
+[   39678ms] [INFO] [entity-list-runtime] script carregado (exibiÃ§Ãµes das listagens entity-list) @ https://wakeme.crmeducacional.com/app/entity-list/entity-list-runtime.js?v=20260813orig:171

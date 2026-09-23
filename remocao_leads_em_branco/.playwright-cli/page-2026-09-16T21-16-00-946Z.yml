@@ -1,0 +1,31 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - img "WakeMe Pro" [ref=e6]
+      - heading "Entrar" [level=1] [ref=e7]
+      - paragraph [ref=e8]: Informe seu e-mail e senha para entrar na plataforma
+    - generic [ref=e10]:
+      - text: E-mail
+      - textbox "E-mail" [ref=e11]
+      - text: Senha
+      - textbox "Senha" [ref=e12]
+      - link "Esqueci a senha" [ref=e13] [cursor=pointer]:
+        - /url: forgot-password.html
+      - generic [ref=e14]:
+        - checkbox "Continuar Conectado?" [ref=e15]
+        - text: Continuar Conectado?
+      - button "Entrar" [ref=e16] [cursor=pointer]
+  - generic [ref=e17]:
+    - paragraph [ref=e18]:
+      - link "Home" [ref=e19] [cursor=pointer]:
+        - /url: https://crmeducacional.com/
+      - text: "|"
+      - link "Privacidade" [ref=e20] [cursor=pointer]:
+        - /url: https://crmeducacional.com/politica-de-privacidade/
+      - text: "|"
+      - link "Termos" [ref=e21] [cursor=pointer]:
+        - /url: "#"
+      - text: "|"
+      - link "Suporte" [ref=e22] [cursor=pointer]:
+        - /url: https://atendimento.crmeducacional.com/
+    - paragraph [ref=e23]: © CRM Educacional
