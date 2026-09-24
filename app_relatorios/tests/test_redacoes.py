@@ -30,6 +30,7 @@ def test_corrige_dataframe_sem_alterar_original():
     entrada = pd.DataFrame(
         {
             "Id": ["1", "2"],
+            "Tema da redação": ["Educação", "Meio ambiente"],
             "Texto da redação": ["Primeiro texto", "Segundo texto"],
             "Nota": [None, None],
             "Corrigido por": [None, None],
@@ -42,7 +43,9 @@ def test_corrige_dataframe_sem_alterar_original():
         "chave",
         "modelo",
         ao_corrigir=lambda atual, total: progresso.append((atual, total)),
-        corretor=lambda texto, chave, modelo: 8 if texto.startswith("Primeiro") else 9,
+        corretor=lambda texto, tema, chave, modelo: (
+            8 if tema == "Educação" and texto.startswith("Primeiro") else 9
+        ),
     )
 
     assert entrada["Nota"].isna().all()
@@ -67,11 +70,17 @@ def test_chamada_openrouter_pede_nota_estruturada(monkeypatch):
 
     monkeypatch.setattr(redacoes.requests, "post", post)
 
-    nota = redacoes.corrigir_redacao("Minha redação", "segredo", "modelo/teste")
+    nota = redacoes.corrigir_redacao(
+        "Minha redação", "O papel da educação", "segredo", "modelo/teste"
+    )
 
     assert nota == 8.5
     assert chamada["headers"]["Authorization"] == "Bearer segredo"
     assert chamada["json"]["model"] == "modelo/teste"
+    mensagens = chamada["json"]["messages"]
+    assert "fuga total ou parcial" in mensagens[0]["content"]
+    assert "Tema da redação:\nO papel da educação" in mensagens[1]["content"]
+    assert "Texto da redação:\nMinha redação" in mensagens[1]["content"]
     schema = chamada["json"]["response_format"]["json_schema"]["schema"]
     assert schema["properties"]["nota"]["minimum"] == 1
     assert schema["properties"]["nota"]["maximum"] == 10

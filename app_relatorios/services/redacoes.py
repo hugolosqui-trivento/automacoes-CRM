@@ -18,11 +18,12 @@ MODELO_PADRAO = "openai/gpt-4o-mini"
 CRITERIOS = """
 Avalie a redação considerando, de forma equilibrada:
 - coerência temática;
+- coesão textual;
 - abrangência do conteúdo;
 - correção gramatical;
 - qualidade geral da escrita.
 
-A nota deve estar entre 1 e 10.
+A nota deve estar entre 0 e 10.
 """.strip()
 
 REDACAO_ATTRIBUTES = (
@@ -106,6 +107,7 @@ def buscar_redacoes_entregues(settings: CrmSettings) -> pd.DataFrame:
 
 def corrigir_redacao(
     texto_redacao: str,
+    tema_redacao: str,
     api_key: str,
     modelo: str = MODELO_PADRAO,
 ) -> float:
@@ -121,11 +123,18 @@ def corrigir_redacao(
             "messages": [
                 {
                     "role": "system",
-                    "content": f"Você é um corretor de redações. {CRITERIOS}",
+                    "content": (
+                        f"Você é um corretor de redações. {CRITERIOS}\n\n"
+                        "Compare o texto ao tema proposto e considere fuga total ou "
+                        "parcial ao tema na nota."
+                    ),
                 },
                 {
                     "role": "user",
-                    "content": f"Redação:\n\n{texto_redacao}",
+                    "content": (
+                        f"Tema da redação:\n{tema_redacao}\n\n"
+                        f"Texto da redação:\n{texto_redacao}"
+                    ),
                 },
             ],
             "response_format": {
@@ -156,7 +165,7 @@ def corrigir_redacoes(
     api_key: str,
     modelo: str = MODELO_PADRAO,
     ao_corrigir: Callable[[int, int], None] | None = None,
-    corretor: Callable[[str, str, str], float] = corrigir_redacao,
+    corretor: Callable[[str, str, str, str], float] = corrigir_redacao,
 ) -> pd.DataFrame:
     """Corrige uma cópia do dataframe e informa o progresso após cada redação."""
     resultado = dataframe.copy()
@@ -166,7 +175,10 @@ def corrigir_redacoes(
         texto = str(linha.get("Texto da redação", "")).strip()
         if not texto or texto.casefold() in {"nan", "none", "<na>"}:
             raise ValueError(f"A redação da linha {indice + 1} não possui texto.")
-        resultado.at[indice, "Nota"] = corretor(texto, api_key, modelo)
+        tema = str(linha.get("Tema da redação", "")).strip()
+        if not tema or tema.casefold() in {"nan", "none", "<na>"}:
+            raise ValueError(f"A redação da linha {indice + 1} não possui tema.")
+        resultado.at[indice, "Nota"] = corretor(texto, tema, api_key, modelo)
         resultado.at[indice, "Corrigido por"] = "IA Trivento"
         if ao_corrigir is not None:
             ao_corrigir(concluida, total)
