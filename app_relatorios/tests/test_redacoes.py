@@ -33,7 +33,11 @@ def test_corrige_dataframe_sem_alterar_original():
             "Tema da redação": ["Educação", "Meio ambiente"],
             "Texto da redação": ["Primeiro texto", "Segundo texto"],
             "Nota": [None, None],
+            "Observações": [None, None],
             "Corrigido por": [None, None],
+            "Data da correção": pd.Series(
+                [pd.NaT, pd.NaT], dtype="datetime64[s, America/Sao_Paulo]"
+            ),
         }
     )
     progresso = []
@@ -44,13 +48,23 @@ def test_corrige_dataframe_sem_alterar_original():
         "modelo",
         ao_corrigir=lambda atual, total: progresso.append((atual, total)),
         corretor=lambda texto, tema, chave, modelo: (
-            8 if tema == "Educação" and texto.startswith("Primeiro") else 9
+            (8, "Boa abordagem do tema")
+            if tema == "Educação" and texto.startswith("Primeiro")
+            else (9, "Argumentação consistente")
         ),
     )
 
     assert entrada["Nota"].isna().all()
     assert resultado["Nota"].tolist() == [8, 9]
+    assert resultado["Observações"].tolist() == [
+        "Boa abordagem do tema",
+        "Argumentação consistente",
+    ]
     assert resultado["Corrigido por"].tolist() == ["IA Trivento", "IA Trivento"]
+    assert str(resultado["Data da correção"].dtype) == (
+        "datetime64[s, America/Sao_Paulo]"
+    )
+    assert resultado["Data da correção"].notna().all()
     assert progresso == [(1, 2), (2, 2)]
 
 
@@ -62,7 +76,20 @@ def test_chamada_openrouter_pede_nota_estruturada(monkeypatch):
             pass
 
         def json(self):
-            return {"choices": [{"message": {"content": json.dumps({"nota": 8.5})}}]}
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "content": json.dumps(
+                                {
+                                    "nota": 8.5,
+                                    "comentario": "Atendeu ao tema e apresentou bons argumentos.",
+                                }
+                            )
+                        }
+                    }
+                ]
+            }
 
     def post(url, **kwargs):
         chamada.update(url=url, **kwargs)
@@ -70,11 +97,12 @@ def test_chamada_openrouter_pede_nota_estruturada(monkeypatch):
 
     monkeypatch.setattr(redacoes.requests, "post", post)
 
-    nota = redacoes.corrigir_redacao(
+    nota, comentario = redacoes.corrigir_redacao(
         "Minha redação", "O papel da educação", "segredo", "modelo/teste"
     )
 
     assert nota == 8.5
+    assert comentario == "Atendeu ao tema e apresentou bons argumentos."
     assert chamada["headers"]["Authorization"] == "Bearer segredo"
     assert chamada["json"]["model"] == "modelo/teste"
     mensagens = chamada["json"]["messages"]
@@ -84,16 +112,21 @@ def test_chamada_openrouter_pede_nota_estruturada(monkeypatch):
     schema = chamada["json"]["response_format"]["json_schema"]["schema"]
     assert schema["properties"]["nota"]["minimum"] == 1
     assert schema["properties"]["nota"]["maximum"] == 10
+    assert schema["properties"]["comentario"]["minLength"] == 1
+    assert schema["required"] == ["nota", "comentario"]
 
 
 def test_gera_arquivo_excel():
     arquivo = redacoes.dataframe_para_excel(
         pd.DataFrame(
             {
+                "Id": ["1"],
                 "Nota": [8.5],
-                "Data de entrega": pd.to_datetime(
-                    ["2026-09-23T19:14:30-03:00"], utc=True
-                ).tz_convert("America/Sao_Paulo"),
+                "Corrigido por": ["IA Trivento"],
+                "Observações": ["Atendeu ao tema e apresentou bons argumentos."],
+                "Data da correção": pd.Series(
+                    ["2026-09-24 10:00:00"], dtype="datetime64[s]"
+                ).dt.tz_localize("America/Sao_Paulo"),
             }
         )
     )

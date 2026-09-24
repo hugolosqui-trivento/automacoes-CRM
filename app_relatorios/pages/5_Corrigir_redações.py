@@ -36,6 +36,7 @@ if st.button(
 ):
     try:
         with st.spinner("Consultando as redações no CRM..."):
+            carregar_redacoes.clear()
             redacoes, instante = carregar_redacoes(settings.crm)
         st.session_state.redacoes_entregues = redacoes
         st.session_state.redacoes_corrigidas = None

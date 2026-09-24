@@ -110,7 +110,7 @@ def corrigir_redacao(
     tema_redacao: str,
     api_key: str,
     modelo: str = MODELO_PADRAO,
-) -> float:
+) -> tuple[float, str]:
     resposta = requests.post(
         OPENROUTER_URL,
         headers={
@@ -126,7 +126,9 @@ def corrigir_redacao(
                     "content": (
                         f"Você é um corretor de redações. {CRITERIOS}\n\n"
                         "Compare o texto ao tema proposto e considere fuga total ou "
-                        "parcial ao tema na nota."
+                        "parcial ao tema na nota. Forneça também um comentário objetivo "
+                        "que explique a nota atribuída, destacando os principais acertos "
+                        "e pontos a melhorar."
                     ),
                 },
                 {
@@ -145,9 +147,10 @@ def corrigir_redacao(
                     "schema": {
                         "type": "object",
                         "properties": {
-                            "nota": {"type": "number", "minimum": 1, "maximum": 10}
+                            "nota": {"type": "number", "minimum": 1, "maximum": 10},
+                            "comentario": {"type": "string", "minLength": 1},
                         },
-                        "required": ["nota"],
+                        "required": ["nota", "comentario"],
                         "additionalProperties": False,
                     },
                 },
@@ -157,7 +160,8 @@ def corrigir_redacao(
     )
     resposta.raise_for_status()
     conteudo = resposta.json()["choices"][0]["message"]["content"]
-    return float(json.loads(conteudo)["nota"])
+    correcao = json.loads(conteudo)
+    return float(correcao["nota"]), str(correcao["comentario"]).strip()
 
 
 def corrigir_redacoes(
@@ -165,7 +169,7 @@ def corrigir_redacoes(
     api_key: str,
     modelo: str = MODELO_PADRAO,
     ao_corrigir: Callable[[int, int], None] | None = None,
-    corretor: Callable[[str, str, str, str], float] = corrigir_redacao,
+    corretor: Callable[[str, str, str, str], tuple[float, str]] = corrigir_redacao,
 ) -> pd.DataFrame:
     """Corrige uma cópia do dataframe e informa o progresso após cada redação."""
     resultado = dataframe.copy()
@@ -178,8 +182,17 @@ def corrigir_redacoes(
         tema = str(linha.get("Tema da redação", "")).strip()
         if not tema or tema.casefold() in {"nan", "none", "<na>"}:
             raise ValueError(f"A redação da linha {indice + 1} não possui tema.")
-        resultado.at[indice, "Nota"] = corretor(texto, tema, api_key, modelo)
+        nota, comentario = corretor(texto, tema, api_key, modelo)
+        if not comentario:
+            raise ValueError(
+                f"A IA não forneceu um comentário para a redação da linha {indice + 1}."
+            )
+        resultado.at[indice, "Nota"] = nota
+        resultado.at[indice, "Observações"] = comentario
         resultado.at[indice, "Corrigido por"] = "IA Trivento"
+        resultado.at[indice, "Data da correção"] = pd.Timestamp.now(
+            tz="America/Sao_Paulo"
+        ).floor("s")
         if ao_corrigir is not None:
             ao_corrigir(concluida, total)
 
@@ -188,8 +201,10 @@ def corrigir_redacoes(
 
 def dataframe_para_excel(dataframe: pd.DataFrame) -> bytes:
     exportacao = dataframe.copy()
-    # exportar apenas as seguintes colunas: Id, Nota, Corrigido por, Observações
-    exportacao = exportacao[["Id", "Nota", "Corrigido por", "Observações"]]
+    # exportar apenas as seguintes colunas: Id, Nota, Corrigido por, Observações, Data da correção
+    exportacao = exportacao[["Id", "Nota", "Corrigido por", "Observações", "Data da correção"]]
+    for coluna in exportacao.select_dtypes(include=["datetimetz"]).columns:
+        exportacao[coluna] = exportacao[coluna].dt.tz_localize(None)
     arquivo = BytesIO()
     with pd.ExcelWriter(arquivo, engine="openpyxl") as writer:
         exportacao.to_excel(writer, sheet_name="Redações corrigidas", index=False)
