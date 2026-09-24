@@ -4,3 +4,7 @@
 
 .pytest_cache/
 __pycache__/
+
+
+# qualquer arquivo compilado do Python
+*.pyc
