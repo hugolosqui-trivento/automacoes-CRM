@@ -188,9 +188,8 @@ def corrigir_redacoes(
 
 def dataframe_para_excel(dataframe: pd.DataFrame) -> bytes:
     exportacao = dataframe.copy()
-    for coluna in exportacao.select_dtypes(include=["datetimetz"]).columns:
-        exportacao[coluna] = exportacao[coluna].dt.tz_localize(None)
-
+    # exportar apenas as seguintes colunas: Id, Nota, Corrigido por, Observações
+    exportacao = exportacao[["Id", "Nota", "Corrigido por", "Observações"]]
     arquivo = BytesIO()
     with pd.ExcelWriter(arquivo, engine="openpyxl") as writer:
         exportacao.to_excel(writer, sheet_name="Redações corrigidas", index=False)
