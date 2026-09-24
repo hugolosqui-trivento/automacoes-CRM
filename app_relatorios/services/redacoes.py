@@ -147,7 +147,7 @@ def corrigir_redacao(
                     "schema": {
                         "type": "object",
                         "properties": {
-                            "nota": {"type": "number", "minimum": 1, "maximum": 10},
+                            "nota": {"type": "number", "minimum": 0, "maximum": 10},
                             "comentario": {"type": "string", "minLength": 1},
                         },
                         "required": ["nota", "comentario"],
