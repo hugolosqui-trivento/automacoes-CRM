@@ -69,6 +69,11 @@ def create_fetch_xml(attributes):
     <attribute name="cad_valor" />
     <order attribute="createdonbehalfby" descending="false" />
     <order attribute="cad_avaliacaoid" descending="false" />
+    <link-entity name="cad_inscricaocandidato" from="cad_inscricaocandidatoid" to="cad_inscricaocandidatoid" link-type="inner" alias="cad_inscricaocandidato_cad_avaliacao">
+      <filter type="and">
+        <condition attribute="cad_concursoid" operator="eq" entidade="cad_concurso" nome="Vestibular Escolas Parceiras Lorena 27.1" value="08ede592-39b8-f111-aaae-00224836b90d" />
+      </filter>
+    </link-entity>
   </entity>
 </fetch>"""
 

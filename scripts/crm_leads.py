@@ -19,6 +19,7 @@ PASSWORD = "IntegraçãoCRM"
 AUTH_TYPE = "APICRMEducacional"
 
 atributos = [
+    "crmeduc_escolaslorena",
     "cad_inscricaoatual",
     "cad_cpf",
     "trivento_tabulacaojafoirealizada",
@@ -82,6 +83,7 @@ atributos = [
 ]
 
 rename_columns = {
+    "crmeduc_escolaslorena": "Escola Lorena",
     "cad_inscricaoatual": "Inscrição Atual",
     "cad_cpf" : "cpf",
     "trivento_tabulacaojafoirealizada": "Tabulação Realizada",
