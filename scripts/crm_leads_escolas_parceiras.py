@@ -19,6 +19,9 @@ PASSWORD = "IntegraçãoCRM"
 AUTH_TYPE = "APICRMEducacional"
 
 atributos = [
+    "crmeduc_totaldecaracterescorrecaoredacaotrivento",
+    "crmeduc_redacaotrivento",
+    "crmeduc_notatriventoredacao",
     "crmeduc_escolaslorena",
     "cad_inscricaoatual",
     "cad_cpf",
@@ -83,6 +86,8 @@ atributos = [
 ]
 
 rename_columns = {
+    "crmeduc_totaldecaracterescorrecaoredacaotrivento": "Total Caracteres Redação",
+    "crmeduc_notatriventoredacao": "Nota Redação",
     "crmeduc_escolaslorena": "Escola Lorena",
     "cad_inscricaoatual": "Inscrição Atual",
     "cad_cpf" : "cpf",
