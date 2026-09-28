@@ -17,6 +17,8 @@ from config.regras import (
     PLANILHA_ABAS,
     PLANILHA_MEDICINA_ABAS,
     PROPRIETARIO_PARA_CONSULTOR,
+    REDACAO_LEAD_ATTRIBUTES,
+    REDACAO_LEAD_RENAME,
 )
 from services.crm_api import CrmClient, CrmSettings
 from services.planilha_matriculas import carregar_planilha, carregar_planilha_medicina
@@ -82,4 +84,25 @@ def carregar_dados_medicina(url: str):
 def carregar_redacoes(settings: CrmSettings) -> tuple[pd.DataFrame, datetime]:
     """Busca as redações entregues e registra o instante da consulta."""
     return buscar_redacoes_entregues(settings), datetime.now().astimezone()
+
+
+@st.cache_data(ttl=900, max_entries=10, show_spinner=False)
+def carregar_leads_redacoes(settings: CrmSettings) -> pd.DataFrame:
+    """Carrega os leads separadamente para localizar o CPF pela inscrição atual."""
+    leads = CrmClient(settings).fetch_entity(
+        "lead",
+        REDACAO_LEAD_ATTRIBUTES,
+        REDACAO_LEAD_RENAME,
+    )
+    return _filtrar_leads_escolas_parceiras(leads)
+
+
+def _filtrar_leads_escolas_parceiras(leads: pd.DataFrame) -> pd.DataFrame:
+    """Reproduz o recorte crmeduc_escolaslorena not-null de preencher_crm."""
+    escola = leads.get(
+        "Escola Lorena", pd.Series(pd.NA, index=leads.index, dtype="string")
+    )
+    return leads.loc[
+        escola.notna() & escola.astype("string").str.strip().ne("")
+    ].reset_index(drop=True)
 

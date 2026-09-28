@@ -2,21 +2,37 @@
 
 import streamlit as st
 
-from data_loader import carregar_redacoes
-from services.redacoes import corrigir_redacoes, dataframe_para_excel
+from data_loader import carregar_leads_redacoes, carregar_redacoes
+from services.redacoes import (
+    corrigir_redacoes,
+    enviar_correcoes_crm,
+    vincular_redacoes_a_leads,
+)
 from ui import mostrar_cabecalho, preparar_pagina
 
 
 settings, aberto_em = preparar_pagina("Corrigir redações", "✍️")
 
+st.markdown(
+    """
+    <style>
+    button[aria-label="Download as CSV"] {
+        display: none !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 st.session_state.setdefault("redacoes_entregues", None)
 st.session_state.setdefault("redacoes_corrigidas", None)
 st.session_state.setdefault("redacoes_consultadas_em", None)
+st.session_state.setdefault("redacoes_envio_crm", None)
 
 consultado_em = st.session_state.redacoes_consultadas_em or aberto_em
 mostrar_cabecalho(
     "Corrigir redações",
-    "Busca as redações entregues no CRM, atribui notas de 0 a 100 com IA e prepara o resultado para download.",
+    "Busca as redações e os leads no CRM, corrige os textos com IA e envia o resultado ao cadastro do lead.",
     consultado_em,
 )
 
@@ -35,11 +51,15 @@ if st.button(
     width="stretch",
 ):
     try:
-        with st.spinner("Consultando as redações no CRM..."):
+        with st.spinner("Consultando as redações e os leads no CRM..."):
             carregar_redacoes.clear()
+            carregar_leads_redacoes.clear()
             redacoes, instante = carregar_redacoes(settings.crm)
+            leads = carregar_leads_redacoes(settings.crm)
+            redacoes = vincular_redacoes_a_leads(redacoes, leads)
         st.session_state.redacoes_entregues = redacoes
         st.session_state.redacoes_corrigidas = None
+        st.session_state.redacoes_envio_crm = None
         st.session_state.redacoes_consultadas_em = instante
     except Exception as exc:
         st.error(f"Não foi possível buscar as redações: {exc}")
@@ -56,6 +76,13 @@ if redacoes.empty:
     st.warning("Nenhuma redação com situação Entregue foi encontrada.")
     st.stop()
 
+sem_cpf = redacoes["CPF Lead"].isna().sum()
+if sem_cpf:
+    st.warning(
+        f"{sem_cpf} redação(ões) não possui(em) um lead com CPF e Inscrição Atual correspondente. "
+        "Esses registros poderão ser corrigidos, mas não serão enviados ao CRM."
+    )
+
 st.caption(
     f"Modelo configurado: {settings.openrouter_model}. Cada redação gera uma chamada à API do OpenRouter."
 )
@@ -67,6 +94,8 @@ if st.button(
     width="stretch",
 ):
     barra = st.progress(0, text="Preparando a correção...")
+    st.session_state.redacoes_corrigidas = None
+    st.session_state.redacoes_envio_crm = None
 
     def atualizar_progresso(concluidas: int, total: int) -> None:
         barra.progress(
@@ -87,6 +116,26 @@ if st.button(
     except Exception as exc:
         barra.empty()
         st.error(f"A correção foi interrompida: {exc}")
+    else:
+        barra_envio = st.progress(0, text="Preparando o envio ao CRM...")
+
+        def atualizar_envio(concluidas: int, total: int) -> None:
+            barra_envio.progress(
+                concluidas / total,
+                text=f"Enviando correções: {concluidas} de {total}",
+            )
+
+        try:
+            envio = enviar_correcoes_crm(
+                resultado,
+                settings.crm,
+                ao_enviar=atualizar_envio,
+            )
+            st.session_state.redacoes_envio_crm = envio
+        except Exception as exc:
+            st.error(f"Não foi possível enviar as correções ao CRM: {exc}")
+        finally:
+            barra_envio.empty()
 
 resultado = st.session_state.redacoes_corrigidas
 if resultado is not None:
@@ -99,12 +148,16 @@ if resultado is not None:
             "Nota": st.column_config.NumberColumn("Nota", min_value=0, max_value=100),
         },
     )
-    st.download_button(
-        "Baixar resultado em Excel",
-        data=dataframe_para_excel(resultado),
-        file_name="redacoes_corrigidas.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        icon=":material/download:",
-        on_click="ignore",
-        width="stretch",
-    )
+
+    envio = st.session_state.redacoes_envio_crm
+    if envio is not None:
+        enviados = envio["Status"].eq("Enviado").sum()
+        erros = envio["Status"].eq("Erro").sum()
+        nao_enviados = envio["Status"].eq("Não enviado").sum()
+        if enviados:
+            st.success(f"{enviados} correção(ões) enviada(s) ao CRM com sucesso.")
+        if erros or nao_enviados:
+            st.warning(
+                f"Envio concluído com {erros} erro(s) e {nao_enviados} registro(s) sem CPF correspondente."
+            )
+        st.dataframe(envio, hide_index=True, key="redacoes_envio_crm_tabela")

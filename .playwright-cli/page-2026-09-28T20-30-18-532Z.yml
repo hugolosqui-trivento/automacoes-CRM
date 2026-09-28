@@ -1,0 +1,88 @@
+- generic [ref=e2]:
+  - generic [ref=e7]:
+    - list [ref=e10]:
+      - listitem [ref=e11]:
+        - link [ref=e13] [cursor=pointer]:
+          - /url: http://localhost:8501/
+          - paragraph [ref=e16]: app
+      - listitem [ref=e17]:
+        - link [ref=e19] [cursor=pointer]:
+          - /url: http://localhost:8501/Leads_sem_proprietario
+          - paragraph [ref=e22]: Leads sem proprietario
+      - listitem [ref=e23]:
+        - link [ref=e25] [cursor=pointer]:
+          - /url: http://localhost:8501/Comparacao_de_matriculas
+          - paragraph [ref=e28]: Comparacao de matriculas
+      - listitem [ref=e29]:
+        - link [ref=e31] [cursor=pointer]:
+          - /url: http://localhost:8501/Checar_matriculas_do_BI
+          - paragraph [ref=e34]: Checar matriculas do BI
+      - listitem [ref=e35]:
+        - link [ref=e37] [cursor=pointer]:
+          - /url: http://localhost:8501/Comparacao_de_matriculas_Medicina
+          - paragraph [ref=e40]: Comparacao de matriculas Medicina
+      - listitem [ref=e41]:
+        - link [ref=e43] [cursor=pointer]:
+          - /url: http://localhost:8501/Corrigir_redações
+          - paragraph [ref=e46]: Corrigir redações
+    - generic [ref=e50]:
+      - heading "Trivento" [level=2] [ref=e219]
+      - paragraph [ref=e224]: INTELIGÊNCIA COMERCIAL
+      - separator [ref=e229]
+      - paragraph [ref=e234]: CENTRAL DE RELATÓRIOS
+      - button [ref=e237] [cursor=pointer]:
+        - paragraph [ref=e241]: Atualizar dados agora
+  - generic [ref=e3]:
+    - banner [ref=e80]:
+      - generic [ref=e83]:
+        - button "Deploy" [ref=e85] [cursor=pointer]
+        - button "Main menu" [ref=e89] [cursor=pointer]
+    - generic [ref=e93]:
+      - generic [ref=e246]:
+        - generic [ref=e247]:
+          - img "Símbolo Trivento Educação" [ref=e248]
+          - generic [ref=e249]: Trivento Educação
+        - generic [ref=e250]:
+          - heading "Corrigir redações" [level=1] [ref=e252]:
+            - text: Corrigir redações
+            - generic [ref=e253]:
+              - link "Link to heading":
+                - /url: "#corrigir-redacoes"
+          - paragraph [ref=e254]: Busca as redações e os leads no CRM, corrige os textos com IA e envia o resultado ao cadastro do lead.
+        - generic [ref=e255]: Atualizado em 28/09/2026 17:27
+      - status [ref=e258]:
+        - paragraph [ref=e262]: A correção avalia coerência temática, abrangência do conteúdo, correção gramatical e qualidade geral da escrita.
+      - button "search Buscar redações entregues" [ref=e265] [cursor=pointer]:
+        - generic [ref=e267]:
+          - generic [ref=e268]: search
+          - paragraph [ref=e271]: Buscar redações entregues
+      - generic [ref=e293]:
+        - paragraph [ref=e297]: Redações entregues
+        - paragraph [ref=e300]: "1"
+      - generic [ref=e305]:
+        - button "Show/hide columns" [ref=e309] [cursor=pointer]
+        - button "Download as CSV" [ref=e315] [cursor=pointer]
+        - button "Search" [ref=e321] [cursor=pointer]
+        - button "Fullscreen" [ref=e327] [cursor=pointer]
+      - paragraph [ref=e343]: "Modelo configurado: openai/gpt-4o-mini. Cada redação gera uma chamada à API do OpenRouter."
+      - button "auto_awesome Corrigir redações com IA" [ref=e346] [cursor=pointer]:
+        - generic [ref=e348]:
+          - generic [ref=e349]: auto_awesome
+          - paragraph [ref=e352]: Corrigir redações com IA
+      - heading "Resultado final" [level=3] [ref=e372]:
+        - text: Resultado final
+        - generic [ref=e373]:
+          - link "Link to heading":
+            - /url: "#resultado-final"
+      - generic [ref=e378]:
+        - button "Show/hide columns" [ref=e382] [cursor=pointer]
+        - button "Download as CSV" [ref=e388] [cursor=pointer]
+        - button "Search" [ref=e394] [cursor=pointer]
+        - button "Fullscreen" [ref=e400] [cursor=pointer]
+      - button "cloud_upload Enviar correções ao CRM" [active] [ref=e414] [cursor=pointer]:
+        - generic [ref=e416]:
+          - generic [ref=e417]: cloud_upload
+          - paragraph [ref=e420]: Enviar correções ao CRM
+      - generic [ref=e422]:
+        - paragraph [ref=e425]: Preparando o envio ao CRM...
+        - progressbar "progress" [ref=e426]

@@ -1,0 +1,59 @@
+- generic [ref=f1e2]:
+  - generic [ref=f1e7]:
+    - list [ref=f1e10]:
+      - listitem [ref=f1e11]:
+        - link [ref=f1e13] [cursor=pointer]:
+          - /url: http://localhost:8501/
+          - paragraph [ref=f1e16]: app
+      - listitem [ref=f1e17]:
+        - link [ref=f1e19] [cursor=pointer]:
+          - /url: http://localhost:8501/Leads_sem_proprietario
+          - paragraph [ref=f1e22]: Leads sem proprietario
+      - listitem [ref=f1e23]:
+        - link [ref=f1e25] [cursor=pointer]:
+          - /url: http://localhost:8501/Comparacao_de_matriculas
+          - paragraph [ref=f1e28]: Comparacao de matriculas
+      - listitem [ref=f1e29]:
+        - link [ref=f1e31] [cursor=pointer]:
+          - /url: http://localhost:8501/Checar_matriculas_do_BI
+          - paragraph [ref=f1e34]: Checar matriculas do BI
+      - listitem [ref=f1e35]:
+        - link [ref=f1e37] [cursor=pointer]:
+          - /url: http://localhost:8501/Comparacao_de_matriculas_Medicina
+          - paragraph [ref=f1e40]: Comparacao de matriculas Medicina
+      - listitem [ref=f1e41]:
+        - link [ref=f1e43] [cursor=pointer]:
+          - /url: http://localhost:8501/Corrigir_redações
+          - paragraph [ref=f1e46]: Corrigir redações
+    - generic [ref=f1e50]:
+      - heading "Trivento" [level=2] [ref=f1e55]
+      - paragraph [ref=f1e60]: INTELIGÊNCIA COMERCIAL
+      - separator [ref=f1e65]
+      - paragraph [ref=f1e70]: CENTRAL DE RELATÓRIOS
+      - button [ref=f1e73] [cursor=pointer]:
+        - paragraph [ref=f1e77]: Atualizar dados agora
+  - generic [ref=f1e3]:
+    - banner [ref=f1e80]:
+      - generic [ref=f1e83]:
+        - button "Deploy" [ref=f1e85] [cursor=pointer]
+        - button "Main menu" [ref=f1e89] [cursor=pointer]
+    - generic [ref=f1e93]:
+      - generic [ref=f1e98]:
+        - generic [ref=f1e99]:
+          - img "Símbolo Trivento Educação" [ref=f1e100]
+          - generic [ref=f1e101]: Trivento Educação
+        - generic [ref=f1e102]:
+          - heading "Corrigir redações" [level=1] [ref=f1e104]:
+            - text: Corrigir redações
+            - generic [ref=f1e105]:
+              - link "Link to heading":
+                - /url: "#corrigir-redacoes"
+          - paragraph [ref=f1e106]: Busca as redações e os leads no CRM, corrige os textos com IA e envia o resultado ao cadastro do lead.
+        - generic [ref=f1e107]: Atualizado em 28/09/2026 17:33
+      - status [ref=f1e110]:
+        - paragraph [ref=f1e114]: A correção avalia coerência temática, abrangência do conteúdo, correção gramatical e qualidade geral da escrita.
+      - button "search Buscar redações entregues" [active] [ref=f1e117] [cursor=pointer]:
+        - generic [ref=f1e119]:
+          - generic [ref=f1e120]: search
+          - paragraph [ref=f1e123]: Buscar redações entregues
+      - paragraph [ref=f1e128]: Busque as redações para iniciar a correção.

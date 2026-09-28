@@ -78,3 +78,17 @@ def test_carrega_e_concatena_as_abas_de_medicina(monkeypatch):
         "Medicina - Lorena",
         "Medicina - Altamira",
     ]
+
+
+def test_filtra_leads_de_redacao_pelas_escolas_parceiras():
+    leads = pd.DataFrame(
+        {
+            "Inscrição Atual": ["CAN-001", "CAN-002", "CAN-003"],
+            "CPF Lead": ["111", "222", "333"],
+            "Escola Lorena": ["Escola A", None, "  "],
+        }
+    )
+
+    resultado = data_loader._filtrar_leads_escolas_parceiras(leads)
+
+    assert resultado["Inscrição Atual"].tolist() == ["CAN-001"]

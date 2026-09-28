@@ -9,11 +9,13 @@ import json
 import pandas as pd
 import requests
 
-from services.crm_api import CrmClient, CrmSettings
+from services.crm_api import CrmApiError, CrmClient, CrmSettings
 
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 MODELO_PADRAO = "openai/gpt-4o-mini"
+CAMINHO_ENVIO_CRM = "/api/IntegracaoGenericaClientes/CadastroInscricao"
+CODIGO_CONCURSO_REDACAO = 1005
 
 CRITERIOS = """
 Avalie a redação considerando, de forma equilibrada:
@@ -23,7 +25,7 @@ Avalie a redação considerando, de forma equilibrada:
 - correção gramatical;
 - qualidade geral da escrita.
 
-A nota deve estar entre 0 e 10.
+A nota deve estar entre 0 e 100.
 """.strip()
 
 REDACAO_ATTRIBUTES = (
@@ -105,6 +107,47 @@ def buscar_redacoes_entregues(settings: CrmSettings) -> pd.DataFrame:
     return preparar_redacoes(dataframe)
 
 
+def _normalizar_inscricao(serie: pd.Series) -> pd.Series:
+    return serie.astype("string").str.strip().str.upper().replace("", pd.NA)
+
+
+def vincular_redacoes_a_leads(
+    redacoes: pd.DataFrame,
+    leads: pd.DataFrame,
+) -> pd.DataFrame:
+    """Associa o CPF do lead usando Inscrição × Inscrição Atual."""
+    resultado = redacoes.copy()
+    resultado["_inscricao_key"] = _normalizar_inscricao(
+        resultado.get(
+            "Inscrição", pd.Series(pd.NA, index=resultado.index, dtype="string")
+        )
+    )
+
+    candidatos = leads.copy()
+    candidatos["_inscricao_key"] = _normalizar_inscricao(
+        candidatos.get(
+            "Inscrição Atual",
+            pd.Series(pd.NA, index=candidatos.index, dtype="string"),
+        )
+    )
+    cpf = candidatos.get(
+        "CPF Lead", pd.Series(pd.NA, index=candidatos.index, dtype="string")
+    )
+    candidatos = candidatos.loc[
+        candidatos["_inscricao_key"].notna()
+        & cpf.notna()
+        & cpf.astype("string").str.strip().ne("")
+    ].drop_duplicates("_inscricao_key", keep="first")
+
+    resultado = resultado.merge(
+        candidatos[["_inscricao_key", "CPF Lead"]],
+        on="_inscricao_key",
+        how="left",
+        validate="many_to_one",
+    )
+    return resultado.drop(columns="_inscricao_key")
+
+
 def corrigir_redacao(
     texto_redacao: str,
     tema_redacao: str,
@@ -147,7 +190,7 @@ def corrigir_redacao(
                     "schema": {
                         "type": "object",
                         "properties": {
-                            "nota": {"type": "number", "minimum": 0, "maximum": 10},
+                            "nota": {"type": "number", "minimum": 0, "maximum": 100},
                             "comentario": {"type": "string", "minLength": 1},
                         },
                         "required": ["nota", "comentario"],
@@ -197,6 +240,126 @@ def corrigir_redacoes(
             ao_corrigir(concluida, total)
 
     return resultado
+
+
+def _valor_preenchido(valor) -> bool:
+    return not pd.isna(valor) and str(valor).strip() != ""
+
+
+def _formatar_nota_crm(valor) -> str:
+    """Formata decimal no padrão aceito pela Integração Genérica do CRM."""
+    numero = float(valor)
+    if pd.isna(numero):
+        raise ValueError("Nota inválida.")
+    return f"{numero:g}".replace(".", ",")
+
+
+def montar_payload_correcao(linha: pd.Series) -> dict:
+    """Monta o contrato usado pelo endpoint CadastroInscricao do CRM."""
+    data_correcao = pd.to_datetime(linha["Data da correção"], errors="coerce")
+    if pd.isna(data_correcao):
+        raise ValueError("Data da correção inválida.")
+
+    return {
+        "concurso": {"attributes": {"cad_codigo": CODIGO_CONCURSO_REDACAO}},
+        "lead": {
+            "attributes": {
+                "cad_cpf": str(linha["CPF Lead"]).strip(),
+                "crmeduc_redacaotrivento": str(linha["Texto da redação"]).strip(),
+                "crmeduc_datacorrecaoredacaotrivento": data_correcao.strftime(
+                    "%d/%m/%Y"
+                ),
+                "crmeduc_notatriventoredacao": _formatar_nota_crm(linha["Nota"]),
+                "crmeduc_observacaodaredacaotrivento": str(
+                    linha["Observações"]
+                ).strip(),
+                "crmeduc_totaldecaracterescorrecaoredacaotrivento": int(
+                    linha["Total de caracteres"]
+                ),
+            }
+        },
+        "inscricao": {"attributes": {}},
+    }
+
+
+def enviar_correcoes_crm(
+    dataframe: pd.DataFrame,
+    settings: CrmSettings,
+    ao_enviar: Callable[[int, int], None] | None = None,
+) -> pd.DataFrame:
+    """Envia as correções ao CRM e devolve o resultado individual de cada linha."""
+    colunas_obrigatorias = {
+        "Inscrição",
+        "CPF Lead",
+        "Data da correção",
+        "Nota",
+        "Observações",
+        "Texto da redação",
+        "Total de caracteres",
+    }
+    faltantes = colunas_obrigatorias.difference(dataframe.columns)
+    if faltantes:
+        raise ValueError(
+            "Colunas obrigatórias ausentes para envio: " + ", ".join(sorted(faltantes))
+        )
+
+    total = len(dataframe)
+    resultados = []
+    endpoint = f"{settings.base_url.rstrip('/')}{CAMINHO_ENVIO_CRM}"
+
+    try:
+        with requests.Session() as session:
+            token = CrmClient(settings)._token(session)
+            headers = {
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+            }
+
+            for posicao, (_, linha) in enumerate(dataframe.iterrows(), start=1):
+                inscricao = linha.get("Inscrição")
+                cpf = linha.get("CPF Lead")
+                status = "Não enviado"
+                detalhe = "CPF não localizado pela inscrição atual do lead."
+
+                if _valor_preenchido(cpf):
+                    try:
+                        resposta = session.post(
+                            endpoint,
+                            headers=headers,
+                            json=montar_payload_correcao(linha),
+                            timeout=60,
+                        )
+                        resposta.raise_for_status()
+                        corpo = resposta.json()
+                        erros = corpo.get("Erros", []) if isinstance(corpo, dict) else []
+                        if erros:
+                            status = "Erro"
+                            detalhe = json.dumps(erros, ensure_ascii=False)
+                        else:
+                            status = "Enviado"
+                            detalhe = str(
+                                corpo.get("TrackId", "Envio confirmado pelo CRM")
+                                if isinstance(corpo, dict)
+                                else "Envio confirmado pelo CRM"
+                            )
+                    except (requests.RequestException, ValueError, TypeError, KeyError) as exc:
+                        status = "Erro"
+                        detalhe = str(exc)
+
+                resultados.append(
+                    {
+                        "Inscrição": inscricao,
+                        "CPF Lead": cpf,
+                        "Status": status,
+                        "Detalhe": detalhe,
+                    }
+                )
+                if ao_enviar is not None:
+                    ao_enviar(posicao, total)
+    except (requests.RequestException, KeyError, ValueError) as exc:
+        raise CrmApiError(f"Não foi possível autenticar no CRM: {exc}") from exc
+
+    return pd.DataFrame(resultados)
 
 
 def dataframe_para_excel(dataframe: pd.DataFrame) -> bytes:

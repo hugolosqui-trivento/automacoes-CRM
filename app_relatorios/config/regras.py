@@ -22,6 +22,20 @@ LEAD_RENAME = {
     "crmeduc_unidadeform": "Unidade 2",
 }
 
+REDACAO_LEAD_ATTRIBUTES = [
+    "cad_inscricaoatual",
+    "cad_cpf",
+    "crmeduc_escolaslorena",
+    "createdon",
+]
+
+REDACAO_LEAD_RENAME = {
+    "cad_inscricaoatual": "Inscrição Atual",
+    "cad_cpf": "CPF Lead",
+    "crmeduc_escolaslorena": "Escola Lorena",
+    "createdon": "Data Criação Lead",
+}
+
 INSCRICAO_ATTRIBUTES = [
     "cad_situacao",
     "cad_numeroinscricao",
