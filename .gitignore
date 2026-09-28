@@ -5,6 +5,6 @@
 .pytest_cache/
 __pycache__/
 .venv/
-
+correcao_redacoes/.env
 # qualquer arquivo compilado do Python
 *.pyc

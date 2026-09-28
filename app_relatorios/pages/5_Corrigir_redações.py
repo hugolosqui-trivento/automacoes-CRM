@@ -16,7 +16,7 @@ st.session_state.setdefault("redacoes_consultadas_em", None)
 consultado_em = st.session_state.redacoes_consultadas_em or aberto_em
 mostrar_cabecalho(
     "Corrigir redações",
-    "Busca as redações entregues no CRM, atribui notas de 1 a 10 com IA e prepara o resultado para download.",
+    "Busca as redações entregues no CRM, atribui notas de 0 a 100 com IA e prepara o resultado para download.",
     consultado_em,
 )
 
@@ -27,7 +27,7 @@ if not settings.openrouter_key:
 st.info(
     "A correção avalia coerência temática, abrangência do conteúdo, correção gramatical e qualidade geral da escrita."
 )
-
+    
 if st.button(
     "Buscar redações entregues",
     type="primary",
@@ -96,7 +96,7 @@ if resultado is not None:
         hide_index=True,
         key="redacoes_corrigidas_tabela",
         column_config={
-            "Nota": st.column_config.NumberColumn("Nota", min_value=1, max_value=10),
+            "Nota": st.column_config.NumberColumn("Nota", min_value=0, max_value=100),
         },
     )
     st.download_button(
