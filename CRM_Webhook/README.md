@@ -62,10 +62,10 @@ Em seguida, envie uma inscrição relacionada ao mesmo Lead. O valor de
 ```powershell
 $inscricaoBody = @{
     cad_clientepotencialid = @{
-        Id = "lead-002"
+        Id = "lead-003"
         Name = "Arthur Teste"
     }
-    cad_numeroinscricao = "INS-002"
+    cad_numeroinscricao = "INS-003"
     cad_situacao = @{
         Value = 1
     }
@@ -83,7 +83,7 @@ $inscricaoBody = @{
 } | ConvertTo-Json -Depth 4
 
 Invoke-RestMethod `
-    -Uri "http://localhost:8000/webhook/inscricao" `
+    -Uri "http://localhost:8000/webhook" `
     -Method Post `
     -ContentType "application/json" `
     -Headers @{ "X-Event-Id" = "inscricao-evento-002" } `
