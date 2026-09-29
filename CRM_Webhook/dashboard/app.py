@@ -1,4 +1,3 @@
-import os
 import sys
 from base64 import b64encode
 from datetime import datetime
@@ -15,8 +14,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-if "DATABASE_URL" not in os.environ and "DATABASE_URL" in st.secrets:
-    os.environ["DATABASE_URL"] = st.secrets["DATABASE_URL"]
+from dashboard.config import load_database_url_from_streamlit_secrets
+
+load_database_url_from_streamlit_secrets(st.secrets)
 
 from database.connection import create_tables
 from database.repositories.dashboard import (
