@@ -1,0 +1,32 @@
+[project]
+name = "crm-webhook"
+version = "0.1.0"
+description = "Recepção de webhooks do CRM e painel operacional de leads"
+readme = "README.md"
+authors = [
+    { name = "arthurmenezes-trivento", email = "arthurmadeira@triventoeducacao.com.br" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.141.1",
+    "httpx>=0.28.1",
+    "pandas>=3.0.6",
+    "psycopg[binary]>=3.2.10",
+    "pydantic-settings>=2.10.1",
+    "sqlalchemy>=2.0.43",
+    "streamlit>=1.49.1",
+    "uvicorn>=0.54.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=9.0.0"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[project.scripts]
+crm-webhook = "crm_webhook:main"
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"
