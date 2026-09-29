@@ -28,16 +28,82 @@ uv run streamlit run dashboard/app.py
 - Dashboard: <http://localhost:8501>
 - Saúde: `GET /health`
 
-## Envio de evento
+## Teste de envio de Lead e inscrição
 
-```bash
-curl -X POST http://localhost:8000/webhook \
-  -H "Content-Type: application/json" \
-  -H "X-Event-Id: evento-001" \
-  -d '{"leadid":"lead-001","nome":"Lead Teste","unidade":"Lorena"}'
+Os exemplos abaixo usam PowerShell. Primeiro, envie um Lead:
+
+```powershell
+$leadBody = @{
+    leadid = "lead-003"
+    fullname = "Arthur Teste"
+    emailaddress1 = "lead.teste@example.com"
+    mobilephone = "(12) 99999-9999"
+    cad_concursoatual = @{
+        Id = "concurso-001"
+        Name = "Vestibular 2027.1"
+    }
+    cad_situacaofunil = @{
+        Value = 1
+    }
+    createdon = "2026-09-29T12:00:00Z"
+} | ConvertTo-Json -Depth 4
+
+Invoke-RestMethod `
+    -Uri "http://localhost:8000/webhook" `
+    -Method Post `
+    -ContentType "application/json" `
+    -Headers @{ "X-Event-Id" = "lead-evento-002" } `
+    -Body $leadBody
 ```
 
-`X-Event-Id` é recomendado. Se ele e `event_id` estiverem ausentes, a API deriva uma chave SHA-256 do payload. Reenvios do mesmo evento não duplicam dados, e eventos novos fazem upsert do lead.
+Em seguida, envie uma inscrição relacionada ao mesmo Lead. O valor de
+`cad_clientepotencialid.Id` deve ser igual ao `leadid` enviado anteriormente:
+
+```powershell
+$inscricaoBody = @{
+    cad_clientepotencialid = @{
+        Id = "lead-002"
+        Name = "Arthur Teste"
+    }
+    cad_numeroinscricao = "INS-002"
+    cad_situacao = @{
+        Value = 1
+    }
+    cad_ofertaid = @{
+        Name = "Administração"
+    }
+    crmeduc_linha_de_negocios = @{
+        Name = "Vestibular"
+    }
+    trivento_unidadedeensinotrivento = @{
+        Name = "Lorena"
+    }
+    createdon = "2026-09-29T12:05:00Z"
+    modifiedon = "2026-09-29T12:05:00Z"
+} | ConvertTo-Json -Depth 4
+
+Invoke-RestMethod `
+    -Uri "http://localhost:8000/webhook/inscricao" `
+    -Method Post `
+    -ContentType "application/json" `
+    -Headers @{ "X-Event-Id" = "inscricao-evento-002" } `
+    -Body $inscricaoBody
+```
+
+Os dois endpoints respondem com HTTP `202 Accepted` e:
+
+```json
+{
+  "status": "received",
+  "duplicate": false
+}
+```
+
+`X-Event-Id` é recomendado e deve ser único para cada novo evento. Para repetir o
+teste como um novo envio, altere os dois valores de `X-Event-Id` e mantenha o
+mesmo `leadid` em `cad_clientepotencialid.Id`. Se o cabeçalho e `event_id`
+estiverem ausentes, a API deriva uma chave SHA-256 do payload. Reenvios do mesmo
+evento não duplicam dados, e eventos novos fazem upsert do lead.
 
 O endpoint legado `POST /webhook/lead` permanece disponível. O endpoint
 `POST /webhook/inscricao` recebe inscrições explicitamente, enquanto
