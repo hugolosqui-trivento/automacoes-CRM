@@ -3,6 +3,7 @@ from base64 import b64encode
 from datetime import datetime
 from html import escape
 from pathlib import Path
+from urllib.parse import quote
 
 import pandas as pd
 import streamlit as st
@@ -27,6 +28,27 @@ from database.repositories.dashboard import (
     load_recent_leads,
 )
 from database.retention import purge_records_outside_current_day
+
+
+CRM_LEAD_EDIT_URL = "https://wakeme.crmeducacional.com/app/leads/edit"
+
+
+def dataframe_with_lead_links(rows: list[dict]) -> pd.DataFrame:
+    """Transform Lead IDs into clickable CRM edit-page URLs."""
+    dataframe = pd.DataFrame(rows)
+    if "Lead ID" in dataframe.columns:
+        dataframe["Lead ID"] = dataframe["Lead ID"].map(
+            lambda lead_id: f"{CRM_LEAD_EDIT_URL}/{quote(str(lead_id), safe='')}"
+        )
+    return dataframe
+
+
+def lead_link_column():
+    return st.column_config.LinkColumn(
+        "Lead ID",
+        help="Abrir o lead no CRM Educacional",
+        display_text=r".*/([^/?#]+)$",
+    )
 
 
 @st.cache_resource
@@ -343,10 +365,11 @@ def daily_funnel() -> None:
         return
 
     st.dataframe(
-        pd.DataFrame(stopped_leads),
+        dataframe_with_lead_links(stopped_leads),
         width="stretch",
         hide_index=True,
         column_config={
+            "Lead ID": lead_link_column(),
             "Última movimentação": st.column_config.DatetimeColumn(
                 format="DD/MM/YYYY HH:mm"
             ),
@@ -361,7 +384,12 @@ def recent_leads() -> None:
     if not rows:
         st.info("Nenhum lead recebido ainda.")
         return
-    st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
+    st.dataframe(
+        dataframe_with_lead_links(rows),
+        width="stretch",
+        hide_index=True,
+        column_config={"Lead ID": lead_link_column()},
+    )
 
 
 @st.fragment(run_every="10s")
@@ -371,7 +399,12 @@ def recent_inscricoes() -> None:
     if not rows:
         st.info("Nenhuma inscrição recebida ainda.")
         return
-    st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
+    st.dataframe(
+        dataframe_with_lead_links(rows),
+        width="stretch",
+        hide_index=True,
+        column_config={"Lead ID": lead_link_column()},
+    )
 
 
 error_metric()
