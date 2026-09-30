@@ -21,6 +21,7 @@ load_database_url_from_streamlit_secrets(st.secrets)
 
 from database.connection import create_tables
 from database.repositories.dashboard import (
+    load_daily_matriculas,
     load_daily_funnel,
     load_leads_at_funnel_stage,
     load_metrics,
@@ -31,6 +32,13 @@ from database.retention import purge_records_outside_current_day
 
 
 CRM_LEAD_EDIT_URL = "https://wakeme.crmeducacional.com/app/leads/edit"
+MATRICULAS_ASSET_DIR = Path(__file__).parent / "aba Matriculas"
+MATRICULA_UNIT_LOGOS = {
+    "Altamira": MATRICULAS_ASSET_DIR / "Altamira.png",
+    "Canaã": MATRICULAS_ASSET_DIR / "canaa.png",
+    "Itabirito": MATRICULAS_ASSET_DIR / "itabirito.png",
+    "Lorena": MATRICULAS_ASSET_DIR / "lorena.png",
+}
 
 
 def dataframe_with_lead_links(rows: list[dict]) -> pd.DataFrame:
@@ -80,7 +88,7 @@ def apply_styles() -> None:
         }
         .block-container {
             max-width: 1480px;
-            padding-top: 1.25rem;
+            padding-top: 4.25rem;
             padding-bottom: 3rem;
         }
 
@@ -185,8 +193,41 @@ def apply_styles() -> None:
         }
         h2, h3 { color: #17263a; letter-spacing: -.025em; }
 
+        .matriculas-summary {
+            margin: .35rem 0 1.75rem;
+            text-align: center;
+        }
+        .matriculas-total {
+            color: #111827;
+            font-size: clamp(3.2rem, 7vw, 5.2rem);
+            font-weight: 780;
+            line-height: .95;
+            letter-spacing: -.06em;
+        }
+        .matriculas-title {
+            margin-top: .45rem;
+            color: #111827;
+            font-size: clamp(1.65rem, 3.4vw, 2.8rem);
+            font-weight: 500;
+            letter-spacing: -.035em;
+        }
+        .matriculas-unit-name {
+            margin-top: .15rem;
+            color: #111827;
+            font-size: 1.35rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .matriculas-unit-value {
+            color: #111827;
+            font-size: 3rem;
+            font-weight: 780;
+            line-height: 1;
+            text-align: center;
+        }
+
         @media (max-width: 800px) {
-            .block-container { padding-top: .75rem; }
+            .block-container { padding-top: 4rem; }
             .app-header { grid-template-columns: 1fr; gap: .8rem; padding: 1.15rem; }
             .brand-logo { width: 100px; }
             .brand-title { font-size: 1rem; }
@@ -392,6 +433,53 @@ def recent_leads() -> None:
     )
 
 
+@st.fragment(run_every="30s")
+def daily_matriculas() -> None:
+    summary = load_daily_matriculas()
+
+    with st.container(horizontal_alignment="center"):
+        st.image(
+            MATRICULAS_ASSET_DIR / "trivento.png",
+            width=270,
+        )
+    st.markdown(
+        f"""
+        <section class="matriculas-summary">
+            <div class="matriculas-total">{summary['total']}</div>
+            <div class="matriculas-title">Total de matrículas hoje</div>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    columns = st.columns(4, gap="large", vertical_alignment="bottom")
+    for column, (unit, logo_path) in zip(columns, MATRICULA_UNIT_LOGOS.items()):
+        with column:
+            with st.container(horizontal_alignment="center"):
+                st.image(logo_path, width=180)
+                st.markdown(
+                    f'<div class="matriculas-unit-name">{escape(unit)}</div>',
+                    unsafe_allow_html=True,
+                )
+                st.markdown(
+                    f'<div class="matriculas-unit-value">{summary["units"][unit]}</div>',
+                    unsafe_allow_html=True,
+                )
+
+    if summary["unmapped"]:
+        st.warning(
+            f'{summary["unmapped"]} matrícula(s) sem unidade reconhecida estão '
+            "incluídas no total."
+        )
+
+    updated_at = datetime.now().astimezone()
+    with st.container(horizontal_alignment="center"):
+        st.caption(
+            f"Atualização automática a cada 5 segundos · "
+            f"{updated_at:%d/%m/%Y %H:%M:%S}"
+        )
+
+
 @st.fragment(run_every="10s")
 def recent_inscricoes() -> None:
     st.subheader("Inscrições recentes")
@@ -407,7 +495,15 @@ def recent_inscricoes() -> None:
     )
 
 
-error_metric()
-daily_funnel()
-recent_leads()
-recent_inscricoes()
+matriculas_tab, monitoring_tab = st.tabs(
+    [":material/school: Matrículas", ":material/monitoring: Monitoramento de leads"]
+)
+
+with matriculas_tab:
+    daily_matriculas()
+
+with monitoring_tab:
+    error_metric()
+    daily_funnel()
+    recent_leads()
+    recent_inscricoes()

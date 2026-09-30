@@ -1,5 +1,7 @@
+from collections.abc import Mapping
 from datetime import UTC, datetime, timedelta
 from typing import Any
+import unicodedata
 
 from sqlalchemy import and_, func, select
 
@@ -35,6 +37,87 @@ SITUACAO_TO_FUNNEL_STAGE = {
     6: 3,  # Matriculado
 }
 FUNNEL_STAGES = tuple(FUNNEL_STAGE_LABELS)
+MATRICULA_UNITS = ("Altamira", "Canaã", "Itabirito", "Lorena")
+
+
+def _crm_field_value(value: object, *keys: str) -> object:
+    if not isinstance(value, Mapping):
+        return value
+    for key in keys:
+        if key in value:
+            return value[key]
+    return None
+
+
+def _matricula_unit(value: object) -> str | None:
+    raw_name = _crm_field_value(value, "Name", "name")
+    if raw_name is None:
+        return None
+
+    normalized = "".join(
+        character
+        for character in unicodedata.normalize("NFKD", str(raw_name))
+        if not unicodedata.combining(character)
+    ).casefold()
+    aliases = (
+        ("altamira", "Altamira"),
+        ("canaa", "Canaã"),
+        ("itabirito", "Itabirito"),
+        ("alis", "Itabirito"),
+        ("lorena", "Lorena"),
+    )
+    return next((unit for alias, unit in aliases if alias in normalized), None)
+
+
+def load_daily_matriculas(now: datetime | None = None) -> dict[str, Any]:
+    """Count unique enrollments that reached ``cad_situacao = 6`` today."""
+    day_start, day_end = current_day_utc_bounds(now)
+    with get_session() as session:
+        rows = session.execute(
+            select(WebhookEvent.payload, WebhookEvent.received_at)
+            .where(
+                WebhookEvent.received_at >= day_start,
+                WebhookEvent.received_at < day_end,
+                WebhookEvent.status == "processed",
+            )
+            .order_by(WebhookEvent.received_at)
+        ).all()
+
+    unit_by_inscricao: dict[str, str | None] = {}
+    last_received_at: datetime | None = None
+    for payload, received_at in rows:
+        if not isinstance(payload, Mapping):
+            continue
+
+        numero_inscricao = payload.get("cad_numeroinscricao")
+        raw_situacao = _crm_field_value(payload.get("cad_situacao"), "Value", "value")
+        try:
+            situacao = int(raw_situacao)  # type: ignore[arg-type]
+        except (TypeError, ValueError):
+            continue
+        if situacao != 6 or not numero_inscricao:
+            continue
+
+        registration_key = str(numero_inscricao).strip()
+        if not registration_key:
+            continue
+
+        unit = _matricula_unit(payload.get("trivento_unidadedeensinotrivento"))
+        if unit is not None or registration_key not in unit_by_inscricao:
+            unit_by_inscricao[registration_key] = unit
+        if last_received_at is None or received_at > last_received_at:
+            last_received_at = received_at
+
+    counts = {
+        unit: sum(stored_unit == unit for stored_unit in unit_by_inscricao.values())
+        for unit in MATRICULA_UNITS
+    }
+    return {
+        "total": len(unit_by_inscricao),
+        "units": counts,
+        "unmapped": sum(unit is None for unit in unit_by_inscricao.values()),
+        "last_received_at": last_received_at,
+    }
 
 
 def load_metrics() -> dict[str, Any]:

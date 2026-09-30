@@ -14,6 +14,7 @@ from api.main import app
 from database.connection import get_engine, get_session
 from database.models import Base, Inscricao, Lead, WebhookEvent
 from database.repositories.dashboard import (
+    load_daily_matriculas,
     load_daily_funnel,
     load_leads_at_funnel_stage,
 )
@@ -205,6 +206,80 @@ def test_daily_funnel_combines_lead_and_inscricao_situations(client):
         "Matriculado",
     ]
     assert [stage["count"] for stage in funnel["stages"]] == [1, 1, 1, 1]
+
+
+def test_daily_matriculas_counts_unique_registrations_by_unit(client):
+    units = (
+        ("lead-altamira", "Faculdade Serra Dourada Altamira", "Altamira"),
+        (
+            "lead-canaa",
+            "Faculdade Serra Dourada de Canaã dos Carajás",
+            "Canaã",
+        ),
+        ("lead-itabirito", "Faculdade ALIS Itabirito", "Itabirito"),
+        ("lead-lorena", "Faculdade Serra Dourada Lorena", "Lorena"),
+    )
+    for lead_id, crm_unit, _ in units:
+        assert _create_lead(client, lead_id=lead_id).status_code == 202
+        payload = _inscricao_payload(lead_id=lead_id, situacao=6)
+        payload["trivento_unidadedeensinotrivento"]["Name"] = crm_unit
+        assert client.post("/webhook/inscricao", json=payload).status_code == 202
+
+    duplicate_update = _inscricao_payload(lead_id="lead-canaa", situacao=6)
+    duplicate_update["event_id"] = "another-canaa-matricula-event"
+    duplicate_update["modifiedon"] = datetime.now(UTC).isoformat()
+    assert client.post("/webhook/inscricao", json=duplicate_update).status_code == 202
+
+    assert _create_lead(client, lead_id="lead-not-enrolled").status_code == 202
+    not_enrolled = _inscricao_payload(lead_id="lead-not-enrolled", situacao=2)
+    assert client.post("/webhook/inscricao", json=not_enrolled).status_code == 202
+
+    summary = load_daily_matriculas()
+
+    assert summary["total"] == 4
+    assert summary["units"] == {unit: 1 for _, _, unit in units}
+    assert summary["unmapped"] == 0
+    assert summary["last_received_at"] is not None
+
+
+def test_daily_matriculas_uses_sao_paulo_day_boundary(client):
+    reference = datetime(2026, 9, 30, 12, tzinfo=UTC)
+
+    def matricula_payload(numero):
+        return {
+            "cad_numeroinscricao": numero,
+            "cad_situacao": {"Value": 6},
+            "trivento_unidadedeensinotrivento": {"Name": "Lorena"},
+        }
+
+    with get_session() as session, session.begin():
+        session.add_all(
+            [
+                WebhookEvent(
+                    event_id="before-sao-paulo-day",
+                    event_type="inscricao.updated",
+                    source="test",
+                    lead_id="lead-before-day",
+                    payload=matricula_payload("INS-BEFORE"),
+                    received_at=datetime(2026, 9, 30, 2, 59, tzinfo=UTC),
+                    status="processed",
+                ),
+                WebhookEvent(
+                    event_id="inside-sao-paulo-day",
+                    event_type="inscricao.updated",
+                    source="test",
+                    lead_id="lead-inside-day",
+                    payload=matricula_payload("INS-INSIDE"),
+                    received_at=datetime(2026, 9, 30, 3, 0, tzinfo=UTC),
+                    status="processed",
+                ),
+            ]
+        )
+
+    summary = load_daily_matriculas(reference)
+
+    assert summary["total"] == 1
+    assert summary["units"]["Lorena"] == 1
 
 
 def test_leads_without_inscricao_remain_only_in_lead_stage(client):
