@@ -29,6 +29,80 @@ ngrok http 8000 --url https://thrift-swore-sappiness.ngrok-free.dev
 - Dashboard: <http://localhost:8501>
 - Saúde: `GET /health`
 
+## Docker Compose
+
+O Compose executa três serviços mantendo as responsabilidades separadas:
+
+```text
+ngrok -> FastAPI -> Neon PostgreSQL <- Streamlit
+```
+
+FastAPI e Streamlit usam a mesma imagem do projeto, mas rodam como processos e
+containers independentes. O Neon continua externo ao Compose.
+
+1. Copie `.env.example` para `.env` e preencha `DATABASE_URL`,
+   `NGROK_AUTHTOKEN` e `NGROK_URL`. Use a URL pooled do Neon com o driver
+   `postgresql+psycopg://`.
+2. Com o Docker Desktop em execução, inicie toda a stack:
+
+```bash
+docker compose up --build -d
+docker compose ps
+```
+
+3. Acompanhe os logs e valide os serviços:
+
+```bash
+docker compose logs -f
+curl http://127.0.0.1:8000/health
+```
+
+O dashboard fica em <http://127.0.0.1:8501>. A URL reservada configurada em
+`NGROK_URL` encaminha requisições ao serviço `api` pela rede interna do Compose.
+O token do ngrok e a conexão Neon permanecem somente no `.env`, que não entra
+na imagem nem no Git.
+
+Comandos operacionais:
+
+```bash
+docker compose stop
+docker compose start
+docker compose down
+docker compose build --pull
+```
+
+`docker compose down` remove apenas os containers e a rede do Compose. Os dados
+continuam no Neon.
+
+### Publicar e executar a imagem em um servidor
+
+Crie uma tag no seu registry e publique a mesma imagem usada pelos serviços:
+
+```bash
+docker build -t REGISTRY/crm-webhook:VERSION .
+docker push REGISTRY/crm-webhook:VERSION
+```
+
+No servidor, copie `compose.yaml`, crie o `.env` fora do controle de versão e
+defina nele:
+
+```env
+CRM_WEBHOOK_IMAGE=REGISTRY/crm-webhook:VERSION
+ENVIRONMENT=production
+```
+
+Depois execute:
+
+```bash
+docker compose pull
+docker compose up -d --no-build
+```
+
+Por padrão, as portas 8000 e 8501 são publicadas apenas em `127.0.0.1`. O ngrok
+alcança a API diretamente pela rede interna. Só altere `DASHBOARD_BIND_ADDRESS`
+para `0.0.0.0` se o servidor estiver protegido por firewall, proxy e
+autenticação adequados, pois o painel contém dados pessoais.
+
 ## Teste de envio de Lead e inscrição
 
 Os exemplos abaixo usam PowerShell. Primeiro, envie um Lead:
