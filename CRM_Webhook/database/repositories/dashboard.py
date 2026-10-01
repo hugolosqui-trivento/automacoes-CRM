@@ -37,7 +37,7 @@ SITUACAO_TO_FUNNEL_STAGE = {
     6: 3,  # Matriculado
 }
 FUNNEL_STAGES = tuple(FUNNEL_STAGE_LABELS)
-MATRICULA_UNITS = ("Altamira", "Canaã", "Itabirito", "Lorena")
+MATRICULA_UNITS = ("Altamira", "Canaã", "Itabirito", "Lagoa Santa", "Lorena")
 
 
 def _crm_field_value(value: object, *keys: str) -> object:
@@ -64,6 +64,7 @@ def _matricula_unit(value: object) -> str | None:
         ("canaa", "Canaã"),
         ("itabirito", "Itabirito"),
         ("alis", "Itabirito"),
+        ("lagoa santa", "Lagoa Santa"),
         ("lorena", "Lorena"),
     )
     return next((unit for alias, unit in aliases if alias in normalized), None)

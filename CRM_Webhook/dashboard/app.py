@@ -37,6 +37,7 @@ MATRICULA_UNIT_LOGOS = {
     "Altamira": MATRICULAS_ASSET_DIR / "Altamira.png",
     "Canaã": MATRICULAS_ASSET_DIR / "canaa.png",
     "Itabirito": MATRICULAS_ASSET_DIR / "itabirito.png",
+    "Lagoa Santa": MATRICULAS_ASSET_DIR / "Logo-SD-lagoa-santa.svg",
     "Lorena": MATRICULAS_ASSET_DIR / "lorena.png",
 }
 
@@ -87,8 +88,10 @@ def apply_styles() -> None:
             ), var(--canvas);
         }
         .block-container {
-            max-width: 1480px;
+            max-width: 1600px;
             padding-top: 4.25rem;
+            padding-left: clamp(1rem, 2vw, 2rem);
+            padding-right: clamp(1rem, 2vw, 2rem);
             padding-bottom: 3rem;
         }
 
@@ -433,7 +436,7 @@ def recent_leads() -> None:
     )
 
 
-@st.fragment(run_every="30s")
+@st.fragment(run_every="5s")
 def daily_matriculas() -> None:
     summary = load_daily_matriculas()
 
@@ -452,7 +455,7 @@ def daily_matriculas() -> None:
         unsafe_allow_html=True,
     )
 
-    columns = st.columns(4, gap="large", vertical_alignment="bottom")
+    columns = st.columns(5, gap="small", vertical_alignment="bottom")
     for column, (unit, logo_path) in zip(columns, MATRICULA_UNIT_LOGOS.items()):
         with column:
             with st.container(horizontal_alignment="center"):

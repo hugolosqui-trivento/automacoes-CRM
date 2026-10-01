@@ -217,6 +217,11 @@ def test_daily_matriculas_counts_unique_registrations_by_unit(client):
             "Canaã",
         ),
         ("lead-itabirito", "Faculdade ALIS Itabirito", "Itabirito"),
+        (
+            "lead-lagoa-santa",
+            "Faculdade Serra Dourada Lagoa Santa",
+            "Lagoa Santa",
+        ),
         ("lead-lorena", "Faculdade Serra Dourada Lorena", "Lorena"),
     )
     for lead_id, crm_unit, _ in units:
@@ -236,7 +241,7 @@ def test_daily_matriculas_counts_unique_registrations_by_unit(client):
 
     summary = load_daily_matriculas()
 
-    assert summary["total"] == 4
+    assert summary["total"] == len(units)
     assert summary["units"] == {unit: 1 for _, _, unit in units}
     assert summary["unmapped"] == 0
     assert summary["last_received_at"] is not None
