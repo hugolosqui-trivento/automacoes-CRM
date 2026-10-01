@@ -21,6 +21,7 @@ Em terminais separados:
 ```bash
 uv run uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
 uv run streamlit run dashboard/app.py
+ngrok http 8000 --url https://thrift-swore-sappiness.ngrok-free.dev 
 ```
 
 - API: <http://localhost:8000>
