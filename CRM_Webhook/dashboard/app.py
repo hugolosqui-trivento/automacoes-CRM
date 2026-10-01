@@ -208,11 +208,12 @@ def apply_styles() -> None:
             letter-spacing: -.06em;
         }
         .matriculas-title {
-            margin-top: .45rem;
+            margin: .35rem 0 .75rem;
             color: #111827;
             font-size: clamp(1.65rem, 3.4vw, 2.8rem);
             font-weight: 500;
             letter-spacing: -.035em;
+            text-align: center;
         }
         .matriculas-unit-name {
             margin-top: .15rem;
@@ -440,6 +441,10 @@ def recent_leads() -> None:
 def daily_matriculas() -> None:
     summary = load_daily_matriculas()
 
+    st.markdown(
+        '<div class="matriculas-title">Total de matrículas hoje</div>',
+        unsafe_allow_html=True,
+    )
     with st.container(horizontal_alignment="center"):
         st.image(
             MATRICULAS_ASSET_DIR / "trivento.png",
@@ -449,7 +454,6 @@ def daily_matriculas() -> None:
         f"""
         <section class="matriculas-summary">
             <div class="matriculas-total">{summary['total']}</div>
-            <div class="matriculas-title">Total de matrículas hoje</div>
         </section>
         """,
         unsafe_allow_html=True,
