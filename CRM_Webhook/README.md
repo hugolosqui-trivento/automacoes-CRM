@@ -74,6 +74,106 @@ docker compose build --pull
 `docker compose down` remove apenas os containers e a rede do Compose. Os dados
 continuam no Neon.
 
+### Testar o Dockerfile sem acessar o Neon
+
+O procedimento abaixo valida a imagem usando um banco SQLite descartável dentro
+de cada container. Assim, os testes de inicialização não executam a rotina de
+retenção sobre o banco Neon configurado no `.env`.
+
+Primeiro, valide o Dockerfile e a configuração do Compose:
+
+```bash
+docker build --check .
+docker compose --env-file .env.example config --quiet
+docker compose --env-file .env.example config --services
+```
+
+A lista de serviços esperada é:
+
+```text
+api
+dashboard
+ngrok
+```
+
+Construa a imagem local:
+
+```bash
+docker build -t crm-webhook:local .
+```
+
+Inicie containers temporários da API e do dashboard. As portas alternativas
+`18000` e `18501` evitam conflito com processos locais nas portas padrão:
+
+```bash
+docker run --rm -d \
+  --name crm-webhook-api-test \
+  -e DATABASE_URL=sqlite:////tmp/crm_webhook.db \
+  -p 127.0.0.1:18000:8000 \
+  crm-webhook:local
+
+docker run --rm -d \
+  --name crm-webhook-dashboard-test \
+  -e DATABASE_URL=sqlite:////tmp/crm_webhook.db \
+  -p 127.0.0.1:18501:8501 \
+  crm-webhook:local \
+  streamlit run dashboard/app.py \
+    --server.address=0.0.0.0 \
+    --server.port=8501 \
+    --server.headless=true
+```
+
+Confirme os health checks pelo host:
+
+```bash
+curl http://127.0.0.1:18000/health
+curl http://127.0.0.1:18501/_stcore/health
+```
+
+Respostas esperadas:
+
+```text
+{"status":"ok"}
+ok
+```
+
+Confirme também que os processos não executam como `root`:
+
+```bash
+docker exec crm-webhook-api-test id -u
+docker exec crm-webhook-dashboard-test id -u
+```
+
+Os dois comandos devem retornar `10001`.
+
+Para consultar os logs durante o diagnóstico:
+
+```bash
+docker logs crm-webhook-api-test
+docker logs crm-webhook-dashboard-test
+```
+
+Ao terminar, remova somente os containers temporários:
+
+```bash
+docker rm -f crm-webhook-api-test crm-webhook-dashboard-test
+```
+
+Como eles foram iniciados com `--rm`, também serão removidos automaticamente se
+forem encerrados normalmente. O arquivo SQLite fica em `/tmp` dentro de cada
+container e desaparece com sua remoção.
+
+Depois dessa validação isolada, teste a integração completa com Neon e ngrok:
+
+```bash
+docker compose up --build -d
+docker compose ps
+docker compose logs -f
+```
+
+Esse último teste usa as credenciais reais do `.env`; confirme antes que
+`DATABASE_URL`, `NGROK_AUTHTOKEN` e `NGROK_URL` estejam preenchidos corretamente.
+
 ### Publicar e executar a imagem em um servidor
 
 Crie uma tag no seu registry e publique a mesma imagem usada pelos serviços:
