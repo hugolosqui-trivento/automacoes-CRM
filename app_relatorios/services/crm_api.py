@@ -45,10 +45,30 @@ class CrmClient:
     @staticmethod
     def _fetch_xml(entity: str, attributes: Iterable[str]) -> str:
         tags = "\n".join(f'<attribute name="{name}"/>' for name in attributes)
+        related_entities = ""
+        if entity == "lead":
+            related_entities = (
+                '<filter type="and">'
+                '<condition attribute="crmeduc_intake" operator="like" '
+                'value="2027/1%" />'
+                "</filter>"
+            )
+        elif entity == "cad_inscricaocandidato":
+            related_entities = (
+                '<link-entity name="lead" from="leadid" '
+                'to="cad_clientepotencialid" link-type="inner" '
+                'alias="cad_lead_cad_inscricaocandidato">'
+                '<filter type="and">'
+                '<condition attribute="crmeduc_intake" operator="like" '
+                'value="2027/1%" />'
+                "</filter>"
+                "</link-entity>"
+            )
         return (
             '<fetch version="1.0" output-format="xml-platform" mapping="logical">'
             f'<entity name="{entity}">{tags}'
             '<order attribute="createdon" descending="true"/>'
+            f"{related_entities}"
             "</entity></fetch>"
         )
 
