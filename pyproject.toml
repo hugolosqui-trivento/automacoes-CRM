@@ -7,4 +7,5 @@ requires-python = ">=3.12"
 dependencies = [
     "pandas>=3.0.6",
     "playwright>=1.63.0",
+    "xmltodict>=1.0.4",
 ]
