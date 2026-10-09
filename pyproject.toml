@@ -3,9 +3,12 @@ name = "automacoes-crm"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
-dependencies = [
-    "pandas>=3.0.6",
-    "playwright>=1.63.0",
-    "xmltodict>=1.0.4",
+requires-python = ">=3.11"
+dependencies = []
+
+# Adicione estas linhas abaixo apontando para suas subpastas:
+[tool.uv.workspace]
+members = [
+    "app_relatorios",
+    "remocao_testes",
 ]
