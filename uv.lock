@@ -932,11 +932,19 @@ name = "remocao-testes"
 version = "0.1.0"
 source = { virtual = "remocao_testes" }
 dependencies = [
+    { name = "pandas" },
     { name = "playwright" },
+    { name = "requests" },
+    { name = "xmltodict" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "playwright", specifier = "==1.63.0" }]
+requires-dist = [
+    { name = "pandas", specifier = "<3" },
+    { name = "playwright", specifier = "==1.63.0" },
+    { name = "requests", specifier = ">=2.34.2" },
+    { name = "xmltodict", specifier = ">=0.15.1" },
+]
 
 [[package]]
 name = "requests"
