@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12"
 
 [manifest]
@@ -74,6 +74,18 @@ wheels = [
 name = "automacoes-crm"
 version = "0.1.0"
 source = { virtual = "." }
+dependencies = [
+    { name = "pandas" },
+    { name = "requests" },
+    { name = "xmltodict" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "pandas", specifier = "<3" },
+    { name = "requests", specifier = ">=2.34.2" },
+    { name = "xmltodict", specifier = ">=0.15.1" },
+]
 
 [[package]]
 name = "certifi"

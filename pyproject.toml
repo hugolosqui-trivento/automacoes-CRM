@@ -4,7 +4,11 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "pandas<3",
+    "requests>=2.34.2",
+    "xmltodict>=0.15.1",
+]
 
 # Adicione estas linhas abaixo apontando para suas subpastas:
 [tool.uv.workspace]
