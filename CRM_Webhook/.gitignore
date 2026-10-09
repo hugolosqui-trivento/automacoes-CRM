@@ -1,9 +1,0 @@
-.env
-.streamlit/secrets.toml
-__pycache__/
-*.pyc
-.pytest_cache/
-.venv/
-.uv-cache/
-.uv-python/
-*.db
