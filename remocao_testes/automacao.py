@@ -215,8 +215,8 @@ def run(playwright: Playwright, validar=False) -> None:
     total = 0
     try:
         page.goto(f"{BASE_URL}/login/index.html")
-        page.get_by_role("textbox", name="E-mail").fill("arthurmadeira@triventoeducacao.com.br")
-        page.get_by_role("textbox", name="Senha").fill("12345678")
+        page.get_by_role("textbox", name="E-mail").fill("hugolosqui@triventoeducacao.com.br")
+        page.get_by_role("textbox", name="Senha").fill("123")
         page.get_by_role("button", name="Entrar", exact=True).click()
         page.wait_for_url(re.compile(r"/app/"))
 
