@@ -71,7 +71,7 @@ PLANILHA_ABAS = {
     "ITABIRITO": "Itabirito",
     "ALTAMIRA": "Altamira",
     "LORENA": "Lorena",
-    "Canaã": "Canaã",
+    "CANAÃ": "Canaã",
 }
 
 PLANILHA_MEDICINA_ABAS = {
