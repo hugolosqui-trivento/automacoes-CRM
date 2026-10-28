@@ -72,6 +72,7 @@ PLANILHA_ABAS = {
     "ALTAMIRA": "Altamira",
     "LORENA": "Lorena",
     "CANAÃ": "Canaã",
+    "LAGOA SANTA": "LAGOA SANTA"
 }
 
 PLANILHA_MEDICINA_ABAS = {
