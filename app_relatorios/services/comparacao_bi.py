@@ -18,6 +18,7 @@ UNIDADES_CONHECIDAS = {
     "canaa": "Canaã",
     "itabirito": "Itabirito",
     "lorena": "Lorena",
+    "Lagoa Santa": "LAGOA SANTA",
 }
 
 
